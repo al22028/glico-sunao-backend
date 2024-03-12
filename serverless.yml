@@ -1,8 +1,75 @@
 service: glico-sunao-backend
 frameworkVersion: "3"
 
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
+  - serverless-prune-plugin
+  - serverless-ignore
+  - serverless-deployment-bucket
+  - serverless-plugin-tracing
+
+custom:
+  # Serverless Deployment Bucket
+  deploymentBucket:
+    versioning: true
+    accelerate: true
+    blockPublicAccess: true
+    tags:
+      - Key: Environment
+        Value: ${self:provider.stage}
+default:
+  stage: dev
+  # Serverless Offline
+  # see: https://www.serverless.com/plugins/serverless-offline
+  serverless-offline:
+    httpPort: 3333
+
+  # Serverless Prune Plugin
+  # see: https://www.serverless.com/plugins/serverless-prune-plugin
+  prune:
+    automatic: true
+    number: 3
+  # Serverless Python Requirements
+  pythonRequirements:
+    # comment out this options the first deployment
+    # Cross compiling
+    dockerizePip: true
+    useDownloadCache: true
+    useStaticCache: true
+    slim: true
+    # poetry
+    usePoetry: true
+    noDeploy:
+      - pytest
+      - boto3
+      - black
+      - mypy
+      - isort
+      - pytest-mock
+      - pytest-cov
+      - taskipy
+      - ruff
+
 provider:
   name: aws
-  runtime: python3.11
-  stage: ${opt:stage, 'dev'}
+  # Default stage (default: dev)
+  stage: ${opt:stage, self:custom.default.stage}
+  # Default region (default: us-east-1)
   region: ap-northeast-1
+
+  # x-ray tracing
+  tracing:
+    lambda: true
+    apiGateway: true
+
+  # Lambda configuration
+  runtime: python3.11
+  runtimeManagement: auto
+  # Processor architecture: 'x86_64' or 'arm64' via Graviton2 (default: x86_64)
+  architecture: x86_64
+  # Default memory size for functions (default: 1024MB)
+  memorySize: 1024
+  # Default timeout for functions (default: 6 seconds)
+  # Note: API Gateway has a maximum timeout of 30 seconds
+  timeout: 30
