@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "glico-sunao-backend"
+version = "0.1.0"
+description = ""
+authors = ["Takahashi Katsuyuki <takahashi.k@world-wing.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
