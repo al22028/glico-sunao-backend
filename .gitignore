@@ -23,3 +23,6 @@ node_modules/
 
 # Mac
 .DS_Store
+
+# Python
+poetry.lock
