@@ -73,3 +73,11 @@ provider:
   # Default timeout for functions (default: 6 seconds)
   # Note: API Gateway has a maximum timeout of 30 seconds
   timeout: 30
+
+package:
+  # package.json devDependencies are not included in the deployment package
+  excludeDevDependencies: true
+  exclude:
+    - ./**
+  include:
+    - src/**
