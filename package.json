@@ -7,7 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "serverless offline start --reloadHandler --stage local",
+    "clean": "rm -rf .serverless .pytest_cache .mypy_cache .coverage .pytest_cache .mypy_cache .ruff_cache htmlcov",
+    "deploy": "serverless deploy --verbose --stage dev --region ap-northeast-1"
   },
   "keywords": [],
   "author": "",

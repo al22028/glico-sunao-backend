@@ -18,8 +18,9 @@ custom:
     tags:
       - Key: Environment
         Value: ${self:provider.stage}
-default:
-  stage: dev
+
+  default:
+    stage: dev
   # Serverless Offline
   # see: https://www.serverless.com/plugins/serverless-offline
   serverless-offline:
@@ -81,3 +82,13 @@ package:
     - ./**
   include:
     - src/**
+
+functions:
+  ApplicationApiHandler:
+    description: Glico SUNAO Application API Handler
+    handler: src/v1/handlers/app.lambda_handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
