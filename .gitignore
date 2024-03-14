@@ -17,7 +17,6 @@ var/
 .installed.cfg
 *.egg
 .venv
-node_modules/
 
 # Serverless directories
 .serverless
@@ -28,3 +27,9 @@ node_modules/
 # Python
 poetry.lock
 __pycache__/
+.venv/
+.mypy_cache/
+.pytest_cache/
+
+# node
+node_modules/
