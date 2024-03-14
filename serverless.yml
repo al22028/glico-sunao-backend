@@ -51,6 +51,7 @@ custom:
       - pytest-cov
       - taskipy
       - ruff
+      - faker
 
 environment:
   TZ: Asia/Tokyo
