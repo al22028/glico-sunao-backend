@@ -1,3 +1,5 @@
+useDotenv: true
+
 service: glico-sunao-backend
 frameworkVersion: "3"
 
@@ -8,6 +10,7 @@ plugins:
   - serverless-ignore
   - serverless-deployment-bucket
   - serverless-plugin-tracing
+  - serverless-dotenv-plugin
 
 custom:
   # Serverless Deployment Bucket
@@ -57,7 +60,8 @@ environment:
   TZ: Asia/Tokyo
   # api config
   STAGE: ${opt:stage, self:custom.default.stage}
-  APP_API_VERSION: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APP_API_VERSION}
+  APP_API_VERSION: ${env:APP_API_VERSION, 'v1'}
+  APP_COMMIT_HASH: ${env:APP_COMMIT_HASH} # GitHub Actionsで追記
   APP_API_CORS_ALLOWED_ORIGINS: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APP_API_CORS_ALLOWED_ORIGINS}
   # lambda powertools config
   POWERTOOLS_LOG_LEVEL: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_LOG_LEVEL}
