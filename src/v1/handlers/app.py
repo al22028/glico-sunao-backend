@@ -5,6 +5,7 @@ from aws_lambda_powertools.event_handler.openapi.models import Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from middlewares.common import handler_middleware
 from pydantic import BaseModel, Field
+from routes import bgl
 
 tracer = Tracer()
 logger = Logger()
@@ -23,6 +24,8 @@ app.enable_swagger(
     description="This is the API documentation for Glico SUNAO Application API.",
     servers=servers,
 )
+
+app.include_router(router=bgl.router, prefix="bgl")
 
 
 class HealthCheckSchema(BaseModel):
