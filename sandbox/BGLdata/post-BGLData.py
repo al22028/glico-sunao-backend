@@ -1,7 +1,6 @@
 from pynamodb.models import Model
 from pynamodb.attributes import (UnicodeAttribute, NumberAttribute, UTCDateTimeAttribute)
-from datetime import datetime, timedelta, timezone
-from datetime import date
+from datetime import datetime, timedelta, timezone, date
 
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
