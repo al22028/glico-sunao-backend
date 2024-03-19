@@ -1,4 +1,5 @@
 # Standard Library
+from datetime import datetime
 from typing import List
 
 # Third Party Library
@@ -38,3 +39,9 @@ class BGLModelORM:
         item.is_deleted = True
         item.save()
         return item
+
+    def find_many_by_user_id(self, user_id: str, _from: datetime, _to: datetime) -> List[BGLModel]:
+        items = BGLModel.query(
+            hash_key=user_id, range_key_condition=BGLModel.record_time.between(_from, _to)
+        )
+        return [item for item in items]
