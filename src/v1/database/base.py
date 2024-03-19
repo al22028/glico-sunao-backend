@@ -1,15 +1,15 @@
 # Standard Library
 from datetime import datetime
+from uuid import uuid4
 
 # Third Party Library
 from pynamodb.attributes import (
+    BooleanAttribute,
     NumberAttribute,
     UnicodeAttribute,
     UTCDateTimeAttribute,
-    BooleanAttribute,
 )
 from pynamodb.models import Model
-from uuid import uuid4
 from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
 from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
@@ -53,8 +53,3 @@ class BGLModel(Model):
             "updated_at": self.updated_at.isoformat(),
         }
         return BGLSchema(**serialized_data)
-
-
-if __name__ == "__main__":
-    if not BGLModel.exists():
-        BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)

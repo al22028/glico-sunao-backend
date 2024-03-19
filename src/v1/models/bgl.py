@@ -24,3 +24,17 @@ class BGLModelORM:
             return item.next()
         except StopIteration:
             raise NotFoundError(f"BGL data not found with id: {id}")
+
+    def update_one(self, id: str, data: BGLCreateRequestSchema) -> BGLModel:
+        item = self.find_one(id)
+        item.value = data.value
+        item.event_timing = data.event_timing.value
+        item.record_time = data.record_time
+        item.save()
+        return item
+
+    def delete_one(self, id: str) -> BGLModel:
+        item = self.find_one(id)
+        item.is_deleted = True
+        item.save()
+        return item
