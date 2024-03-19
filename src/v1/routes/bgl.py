@@ -6,11 +6,10 @@ from typing import List
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from models.bgl import BGLModelORM
-from schemas.bgl import BGLSchema
+from schemas.bgl import BGLCreateRequestSchema, BGLSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
-# tracer = Tracer()
 
 bgl = BGLModelORM()
 
@@ -19,10 +18,36 @@ bgl = BGLModelORM()
     "/",
     tags=["BGL"],
     summary="全ての血糖値データを取得",
-    description="ての血糖値データを取得します。",
+    description="全ての血糖値データを取得します。",
     response_description="AllBGLItems",
     operation_id="fetchAllBGLItems",
 )
 def fetch_all_bgl_items() -> List[BGLSchema]:
     items = bgl.find_all()
-    return [BGLSchema(**item) for item in items]
+    return [item.serializer() for item in items]
+
+
+@router.get(
+    "/<bglId>",
+    tags=["BGL"],
+    summary="特定の血糖値データを取得",
+    description="idで指定された血糖値データを取得します。",
+    response_description="SingleBGLItem",
+    operation_id="fetchSingleBGLItems",
+)
+def fetch_single_bgl_item(bglId: str) -> BGLSchema:
+    data = bgl.find_one(bglId)
+    return data.serializer()
+
+
+@router.post(
+    "/",
+    tags=["BGL"],
+    summary="血糖値データを作成",
+    description="血糖値データを新規作成します。",
+    response_description="Created BGL Item",
+    operation_id="createBGLItem",
+)
+def create_bgl_item(item: BGLCreateRequestSchema) -> BGLSchema:
+    data = bgl.create_one(item)
+    return data.serializer()
