@@ -14,6 +14,7 @@ from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
 from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
 
+# FIXME: This is a temporary solution to use DynamoDB Local
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
 
