@@ -2,7 +2,7 @@
 from typing import List
 
 # Third Party Library
-from aws_lambda_powertools import Tracer
+# from aws_lambda_powertools import Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from models.bgl import BGLModelORM
@@ -10,7 +10,7 @@ from schemas.bgl import BGLSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
-tracer = Tracer()
+# tracer = Tracer()
 
 bgl = BGLModelORM()
 
