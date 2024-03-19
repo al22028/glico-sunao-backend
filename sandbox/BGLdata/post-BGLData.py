@@ -12,7 +12,7 @@ class BGLDataModel(Model):
 
     id = UnicodeAttribute(hash_key=True)
     user_id = UnicodeAttribute(null=False)
-    created_at = UTCDateTimeAttribute(null=False)
+    created_at = UnicodeAttribute(null=False)
     updated_at = UTCDateTimeAttribute(null=False)
     record_time = UTCDateTimeAttribute(null=False)
     event_timing = UnicodeAttribute(null=False)
@@ -24,13 +24,13 @@ if not BGLDataModel.exists():
 
 if __name__ == "__main__":
     current_time_utc = datetime.now(timezone.utc)
-    jst = timezone(timedelta(hours=9))
+    jst = timezone(timedelta(hours=-9))
     current_time_jst = current_time_utc.astimezone(jst)
 
     BGLDataModel(
-        id = "0007",
+        id = "0010",
         user_id = "35c9fa54-6617-431d-abdf-b376c642cda5",
-        created_at = current_time_jst,
+        created_at = datetime.now().isoformat(),
         updated_at = current_time_jst,
         record_time = current_time_jst,
         event_timing = "起床",
