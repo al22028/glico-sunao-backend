@@ -3,6 +3,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from config.api import STAGE
 from database.base import BGLModel
 from middlewares.common import handler_middleware
 from pydantic import BaseModel, Field
@@ -10,9 +11,10 @@ from routes import bgl
 
 logger = Logger()
 
-if not BGLModel.exists():
-    logger.info("Creating BGLModel table")
-    BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+if STAGE == "local":
+    if not BGLModel.exists():
+        logger.info("Creating BGLModel table")
+        BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 
 servers = [
