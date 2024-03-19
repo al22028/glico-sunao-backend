@@ -1,24 +1,29 @@
 # Standard Library
 from datetime import datetime
+from uuid import uuid4
 
 # Third Party Library
-from pynamodb.attributes import NumberAttribute, UnicodeAttribute, UTCDateTimeAttribute
-from pynamodb.indexes import AllProjection, GlobalSecondaryIndex
+from pynamodb.attributes import (
+    BooleanAttribute,
+    NumberAttribute,
+    UnicodeAttribute,
+    UTCDateTimeAttribute,
+)
 from pynamodb.models import Model
 from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
+from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
 
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
 
-class SecondaryIndex(GlobalSecondaryIndex):
-    class Meta:
-        index_name = "global_secondary_index"
-        projection = AllProjection()
-        read_capacity_units = 1
-        write_capacity_units = 1
+def generate_id() -> str:
+    """Generate a unique id
 
-    id = UnicodeAttribute(hash_key=True)
+    Returns:
+        str: generated id without hyphen
+    """
+    return str(uuid4()).replace("-", "")
 
 
 class BGLModel(Model):
@@ -27,33 +32,24 @@ class BGLModel(Model):
         region = "ap-northeast-1"
         host = DYNAMODB_LOCAL_ENDPOINT
 
-    id = SecondaryIndex()
+    id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
     value = NumberAttribute(default=0.0)
     event_timing = UnicodeEnumAttribute(enum_type=EventTiming)
     record_time = UTCDateTimeAttribute(default=datetime.now, range_key=True)
+    is_deleted = BooleanAttribute(default=False)
     created_at = UTCDateTimeAttribute(default=datetime.now)
     updated_at = UTCDateTimeAttribute(default=datetime.now)
 
-
-class Hba1cModel(Model):
-    class Meta:
-        table_name = "hba1c"
-        region = "ap-northeast-1"
-        host = DYNAMODB_LOCAL_ENDPOINT
-
-    id = SecondaryIndex()
-    user_id = UnicodeAttribute(hash_key=True)
-    value = NumberAttribute(default=0.0)
-    event_timing = UnicodeEnumAttribute(enum_type=EventTiming)
-    record_time = UTCDateTimeAttribute(default=datetime.now, range_key=True)
-    created_at = UTCDateTimeAttribute(default=datetime.now)
-    updated_at = UTCDateTimeAttribute(default=datetime.now)
-
-
-if __name__ == "__main__":
-    if not BGLModel.exists():
-        BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-
-    if not Hba1cModel.exists():
-        Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    def serializer(self) -> BGLSchema:
+        serialized_data = {
+            "id": self.id,
+            "user_id": self.user_id,
+            "value": self.value,
+            "event_timing": self.event_timing.value,
+            "is_deleted": self.is_deleted,
+            "record_time": self.record_time.isoformat(),
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
+        return BGLSchema(**serialized_data)
