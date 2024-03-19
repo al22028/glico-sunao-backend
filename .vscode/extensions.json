@@ -5,6 +5,7 @@
     "KevinRose.vsc-python-indent",
     "donjayamanne.python-extension-pack",
     "wayou.vscode-todo-highlight",
+    "editorconfig.editorconfig",
     "ms-python.mypy-type-checker"
   ]
 }
