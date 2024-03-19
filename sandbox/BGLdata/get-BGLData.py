@@ -1,9 +1,10 @@
 from pynamodb.models import Model
-from pynamodb.attributes import (UnicodeAttribute, NumberAttribute, UTCDateTimeAttribute)
+from pynamodb.attributes import (UnicodeAttribute, UTCDateTimeAttribute, NumberAttribute)
 from datetime import datetime, timedelta, timezone
 from datetime import date
 
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
+
 
 class BGLDataModel(Model):
     class Meta:
@@ -19,21 +20,9 @@ class BGLDataModel(Model):
     event_timing = UnicodeAttribute(null=False)
     blood_glucose_level = NumberAttribute(null=False)
 
-
-if not BGLDataModel.exists():
-    BGLDataModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-
 if __name__ == "__main__":
-    current_time_utc = datetime.now(timezone.utc)
-    jst = timezone(timedelta(hours=9))
-    current_time_jst = current_time_utc.astimezone(jst)
-
-    BGLDataModel(
-        id = "0007",
-        user_id = "35c9fa54-6617-431d-abdf-b376c642cda5",
-        created_at = current_time_jst,
-        updated_at = current_time_jst,
-        record_time = current_time_jst,
-        event_timing = "起床",
-        blood_glucose_level = 100.5
-    ).save()
+    try:
+        data = BGLDataModel.get("0002")
+        print(data.blood_glucose_level)
+    except BGLDataModel.DoesNotExist:
+        print("指定されたキーに対応するアイテムが見つかりませんでした。")
