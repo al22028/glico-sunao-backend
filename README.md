@@ -39,6 +39,20 @@ poetry install
 poetry shell # 仮想環境のシェルを起動
 ```
 
+## Local Debug
+
+ローカルでの開発方法
+
+```bash
+# 開始時
+npm install
+poetry install --no-root
+docker compose up -d
+npm run dev
+# 終了時
+docker compose down
+```
+
 ## Task runnner
 
 タスクランナーとしていくつかのスクリプトをエイリアスとして登録しています
