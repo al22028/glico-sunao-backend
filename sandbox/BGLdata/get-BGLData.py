@@ -5,9 +5,9 @@ from datetime import datetime, timedelta, timezone, date
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
 
-class Hba1cDataModel(Model):
+class BGLDataModel(Model):
     class Meta:
-        table_name = "test-Hba1cdata"
+        table_name = "test-BGLdata"
         region = "ap-northeast-1"
         host = DYNAMODB_LOCAL_ENDPOINT
 
@@ -17,11 +17,11 @@ class Hba1cDataModel(Model):
     updated_at = UTCDateTimeAttribute(null=False)
     record_time = UTCDateTimeAttribute(null=False)
     event_timing = UnicodeAttribute(null=False)
-    Hba1c = NumberAttribute(null=False)
+    blood_glucose_level = NumberAttribute(null=False)
 
 if __name__ == "__main__":
     try:
-        data = Hba1cDataModel.get("0002")
-        print(data.Hba1c)
-    except Hba1cDataModel.DoesNotExist:
+        data = BGLDataModel.get("0002")
+        print(data.blood_glucose_level)
+    except BGLDataModel.DoesNotExist:
         print("指定されたキーに対応するアイテムが見つかりませんでした。")
