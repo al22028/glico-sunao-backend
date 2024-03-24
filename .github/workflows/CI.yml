@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        # This is the version of the action for setting up Python, not the Python version.
+        uses: actions/setup-python@v4
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: "3.11.6"
+          # Optional - x64 or x86 architecture, defaults to x64
+          architecture: "x64"
+      # You can test your matrix by printing the current Python version
+      - name: Cache Poetry cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+      # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+      - name: Cache Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.local
+          key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+
+      - name: Install poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version ${{ env.POETRY_VERSION }}
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        if: steps.poetry-cache.outputs.cache-hit != 'true'
+
+      - name: Install dependencies
+        run: poetry install --no-root
+        if: steps.packages-cache.outputs.cache-hit != 'true'
+
+      - name: Run format
+        run: poetry run task format
+      - name: Run lint
+        run: poetry run task lint
