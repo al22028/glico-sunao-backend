@@ -34,12 +34,13 @@ jobs:
 
       - name: Install poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python --version ${{ env.POETRY_VERSION }}
+          curl -sSL https://install.python-poetry.org | python3 - --version ${{ env.POETRY_VERSION }}
           echo "$HOME/.local/bin" >> $GITHUB_PATH
         if: steps.poetry-cache.outputs.cache-hit != 'true'
 
-      - name: Install dependencies
-        run: poetry install --no-root
+      - name: Resolve Dependencies
+        run: |
+          poetry install
         if: steps.packages-cache.outputs.cache-hit != 'true'
 
       - name: Run format
