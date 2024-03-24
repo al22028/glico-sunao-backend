@@ -34,7 +34,7 @@ jobs:
 
       - name: Install poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version ${{ env.POETRY_VERSION }}
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
           echo "$HOME/.local/bin" >> $GITHUB_PATH
         if: steps.poetry-cache.outputs.cache-hit != 'true'
 
