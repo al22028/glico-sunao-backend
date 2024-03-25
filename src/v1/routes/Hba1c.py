@@ -9,9 +9,9 @@ from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
-from database.base_Hba1c import Hba1cModel
-from models.Hba1c import Hba1cModelORM
-from schemas.Hba1c import Hba1cCreateRequestSchema, Hba1cSchema
+from database.base import Hba1cModel
+from models.hba1c import Hba1cModelORM
+from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()

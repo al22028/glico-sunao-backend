@@ -4,8 +4,8 @@ from typing import List
 
 # Third Party Library
 from aws_lambda_powertools.event_handler.exceptions import NotFoundError
-from database.base_Hba1c import Hba1cModel
-from schemas.Hba1c import Hba1cCreateRequestSchema
+from database.base import Hba1cModel
+from schemas.hba1c import Hba1cCreateRequestSchema
 
 
 class Hba1cModelORM:
