@@ -29,7 +29,7 @@ class BGLModelORM:
     def update_one(self, id: str, data: BGLCreateRequestSchema) -> BGLModel:
         item = self.find_one(id)
         item.value = data.value
-        item.event_timing = data.event_timing.value
+        item.event_timing = data.event_timing
         item.record_time = data.record_time
         item.save()
         return item
