@@ -40,7 +40,9 @@ class Hba1cModelORM:
         item.save()
         return item
 
-    def find_many_by_user_id(self, user_id: str, _from: datetime, _to: datetime) -> List[Hba1cModel]:
+    def find_many_by_user_id(
+        self, user_id: str, _from: datetime, _to: datetime
+    ) -> List[Hba1cModel]:
         items = Hba1cModel.query(
             hash_key=user_id, range_key_condition=Hba1cModel.record_time.between(_from, _to)
         )

@@ -12,8 +12,8 @@ from pynamodb.attributes import (
 from pynamodb.models import Model
 from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
 from schemas.bgl import BGLSchema
-from schemas.hba1c import Hba1cSchema
 from schemas.event_timing import EventTiming
+from schemas.hba1c import Hba1cSchema
 
 # FIXME: This is a temporary solution to use DynamoDB Local
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
@@ -55,6 +55,7 @@ class BGLModel(Model):
             "updated_at": self.updated_at.isoformat(),
         }
         return BGLSchema(**serialized_data)
+
 
 class Hba1cModel(Model):
     class Meta:

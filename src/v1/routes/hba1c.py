@@ -18,6 +18,7 @@ router = Router()
 
 Hba1c = Hba1cModelORM()
 
+
 @router.get(
     "/",
     tags=["Hba1c"],
