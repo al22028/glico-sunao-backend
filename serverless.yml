@@ -13,7 +13,8 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
-  # Serverless Deployment Bucket
+  # NOTE: Serverless Deployment Bucket Configuration
+  # LINK - https://www.serverless.com/plugins/serverless-deployment-bucket
   deploymentBucket:
     versioning: true
     accelerate: true
@@ -24,17 +25,21 @@ custom:
 
   default:
     stage: dev
-  # Serverless Offline
-  # see: https://www.serverless.com/plugins/serverless-offline
+
+  # NOTE: Serverless Offline Configuration
+  # LINK - https://www.serverless.com/plugins/serverless-offline
   serverless-offline:
     httpPort: 3333
+    noPrependStageInUrl: true
 
-  # Serverless Prune Plugin
-  # see: https://www.serverless.com/plugins/serverless-prune-plugin
+  # NOTE: Serverless Prune Plugin Configuration
+  # LINK - https://www.serverless.com/plugins/serverless-prune-plugin
   prune:
     automatic: true
     number: 3
-  # Serverless Python Requirements
+
+  # NOTE: Serverless Python Requirements Configuration
+  # LINK - https://www.serverless.com/plugins/serverless-python-requirements
   pythonRequirements:
     # comment out this options the first deployment
     # Cross compiling
@@ -93,6 +98,12 @@ provider:
   # Default timeout for functions (default: 6 seconds)
   # Note: API Gateway has a maximum timeout of 30 seconds
   timeout: 30
+
+  # NOTE: Serverless Deployment Bucket Configuration
+  # LINK - https://www.serverless.com/plugins/serverless-deployment-bucket
+  deploymentBucket:
+    name: ${self:service}-deployment-bucket-${self:provider.stage}
+    serverSideEncryption: AES256
 
 package:
   # package.json devDependencies are not included in the deployment package
