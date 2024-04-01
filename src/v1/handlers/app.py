@@ -20,9 +20,7 @@ if STAGE == "local":
         Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 servers = [
-    Server(
-        url="http://localhost:3333/local", description="Local Development Server", variables=None
-    ),
+    Server(url="http://localhost:3333", description="Local Development Server", variables=None),
 ]
 app = APIGatewayRestResolver(enable_validation=True)
 app.enable_swagger(
