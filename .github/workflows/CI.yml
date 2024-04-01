@@ -47,3 +47,5 @@ jobs:
         run: poetry run task format
       - name: Run lint
         run: poetry run task lint
+      - name: Run test
+        run: poetry run task test

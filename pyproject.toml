@@ -45,11 +45,20 @@ lint-mypy = "mypy src tests"
 lint-black = "black --check src tests"
 
 
+# NOTE: Pytest configurations
+[tool.pytest.ini_options]
+pythonpath = "src/v1"
+testpaths = ["tests"]
+
+
+# NOTE: Black configurations
 [tool.black]
 line-length = 100
 
+
+# NOTE: Isort configurations
+# LINK - https://pycqa.github.io/isort/docs/configuration/multi_line_output_modes.html
 [tool.isort]
-# see: https://pycqa.github.io/isort/docs/configuration/multi_line_output_modes.html
 profile = "black"
 line_length = 100
 import_heading_stdlib = "Standard Library"
@@ -59,8 +68,9 @@ import_heading_localfolder = "Local Library"
 multi_line_output = 3
 include_trailing_comma = true
 
+# NOTE: Mypy configurations
+# LINK - https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]
-# The mypy configurations: https://mypy.readthedocs.io/en/stable/config_file.html
 # Prefixes each error with the relevant context.
 show_error_context = true
 # Shows column numbers in error messages.
@@ -78,8 +88,9 @@ warn_unused_ignores = true
 # Warns about casting an expression to its inferred type.
 warn_redundant_casts = true
 
+
+# NOTE: Ruff configurations
 [tool.ruff]
 exclude = [".venv", "__pycache__", ".git"]
-
 line-length = 100
 indent-width = 4
