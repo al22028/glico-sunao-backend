@@ -3,6 +3,7 @@ from datetime import datetime
 from uuid import uuid4
 
 # Third Party Library
+from config.api import STAGE
 from pynamodb.attributes import (
     BooleanAttribute,
     NumberAttribute,
@@ -15,7 +16,7 @@ from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
 from schemas.hba1c import Hba1cSchema
 
-# FIXME: This is a temporary solution to use DynamoDB Local
+# NOTE: This is local endpoint for DynamoDB
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
 
@@ -32,7 +33,8 @@ class BGLModel(Model):
     class Meta:
         table_name = "bgl"
         region = "ap-northeast-1"
-        host = DYNAMODB_LOCAL_ENDPOINT
+        if STAGE == "local":
+            host = DYNAMODB_LOCAL_ENDPOINT
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
@@ -61,7 +63,8 @@ class Hba1cModel(Model):
     class Meta:
         table_name = "hba1c"
         region = "ap-northeast-1"
-        host = DYNAMODB_LOCAL_ENDPOINT
+        if STAGE == "local":
+            host = DYNAMODB_LOCAL_ENDPOINT
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
