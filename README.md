@@ -2,9 +2,9 @@
 
 ## Servers
 
-| STAGE | Swagger                               | BASE_URL                         |
-| ----- | ------------------------------------- | :------------------------------- |
-| local | <http://localhost:3333/local/swagger> | <http://localhost:3333/local/v1> |
+| STAGE | Swagger                         | BASE_URL                   |
+| ----- | ------------------------------- | :------------------------- |
+| local | <http://localhost:3333/swagger> | <http://localhost:3333/v1> |
 
 ## 環境構築
 
@@ -59,9 +59,9 @@ docker compose down
 
 | Runtime | Task         | Command       | Description                    |
 | ------- | ------------ | ------------- | ------------------------------ |
-| Python  | テスト       | `task test`   | Pytestのテストを実行します     |
-| Python  | フォーマット | `task format` | black formatterを実行します    |
-| Python  | リント       | `task lint`   | ruffでlintを実行します         |
+| Python  | テスト       | `task test`   | Pytest のテストを実行します    |
+| Python  | フォーマット | `task format` | black formatter を実行します   |
+| Python  | リント       | `task lint`   | ruff で lint を実行します      |
 | Node    | 開発         | `npm run dev` | 開発用のサーバーを立ち上げます |
 
 ## Branch
