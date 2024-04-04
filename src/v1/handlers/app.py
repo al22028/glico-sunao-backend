@@ -23,7 +23,7 @@ local_server = Server(
     url="http://localhost:3333", description="Local Development Server", variables=None
 )
 dev_server = Server(
-    url="https://loa1jiqb4j.execute-api.ap-northeast-1.amazonaws.com/dev",
+    url="https://5v3zfa18l1.execute-api.ap-northeast-1.amazonaws.com/dev",
     description="Development Server",
     variables=None,
 )
