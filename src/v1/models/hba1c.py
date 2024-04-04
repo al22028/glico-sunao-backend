@@ -12,7 +12,7 @@ class Hba1cModelORM:
 
     def find_all(self) -> List[Hba1cModel]:
         items = Hba1cModel.scan()
-        return [item for item in items]
+        return [item for item in items if not item.is_deleted]
 
     def create_one(self, data: Hba1cCreateRequestSchema) -> Hba1cModel:
         item = Hba1cModel(**data.model_dump())
@@ -46,4 +46,4 @@ class Hba1cModelORM:
         items = Hba1cModel.query(
             hash_key=user_id, range_key_condition=Hba1cModel.record_time.between(_from, _to)
         )
-        return [item for item in items]
+        return [item for item in items if not item.is_deleted]

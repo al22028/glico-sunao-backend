@@ -8,11 +8,15 @@ from database.base import BGLModel
 from schemas.bgl import BGLCreateRequestSchema
 
 
+def is_not_deleted(item: BGLModel) -> bool:
+    return not item.is_deleted
+
+
 class BGLModelORM:
 
     def find_all(self) -> List[BGLModel]:
         items = BGLModel.scan()
-        return [item for item in items]
+        return [item for item in items if not item.is_deleted]
 
     def create_one(self, data: BGLCreateRequestSchema) -> BGLModel:
         item = BGLModel(**data.model_dump())
@@ -44,4 +48,4 @@ class BGLModelORM:
         items = BGLModel.query(
             hash_key=user_id, range_key_condition=BGLModel.record_time.between(_from, _to)
         )
-        return [item for item in items]
+        return [item for item in items if not item.is_deleted]
