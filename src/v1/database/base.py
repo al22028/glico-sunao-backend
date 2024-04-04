@@ -3,7 +3,6 @@ from datetime import datetime
 from uuid import uuid4
 
 # Third Party Library
-from config.api import STAGE
 from pynamodb.attributes import (
     BooleanAttribute,
     NumberAttribute,
@@ -33,8 +32,10 @@ class BGLModel(Model):
     class Meta:
         table_name = "bgl"
         region = "ap-northeast-1"
-        if STAGE == "local":
-            host = DYNAMODB_LOCAL_ENDPOINT
+        # if STAGE == "local":
+        #     host = DYNAMODB_LOCAL_ENDPOINT
+        # else:
+        #     host = None
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
@@ -63,8 +64,10 @@ class Hba1cModel(Model):
     class Meta:
         table_name = "hba1c"
         region = "ap-northeast-1"
-        if STAGE == "local":
-            host = DYNAMODB_LOCAL_ENDPOINT
+        # if STAGE == "local":
+        #     host = DYNAMODB_LOCAL_ENDPOINT
+        # else:
+        #     host = None
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
