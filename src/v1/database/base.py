@@ -1,9 +1,9 @@
 # Standard Library
 from datetime import datetime
 from uuid import uuid4
-from config.api import STAGE
 
 # Third Party Library
+from config.api import STAGE
 from pynamodb.attributes import (
     BooleanAttribute,
     NumberAttribute,
