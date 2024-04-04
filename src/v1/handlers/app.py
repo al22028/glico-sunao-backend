@@ -11,7 +11,7 @@ from routes import bgl, hba1c
 
 logger = Logger()
 
-if STAGE == "local":
+if STAGE == "local" or STAGE == "dev":
     if not BGLModel.exists():
         logger.info("Creating BGLModel table")
         BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
@@ -19,9 +19,21 @@ if STAGE == "local":
         logger.info("Creating Hba1cModel table")
         Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
-servers = [
-    Server(url="http://localhost:3333", description="Local Development Server", variables=None),
-]
+local_server = Server(
+    url="http://localhost:3333", description="Local Development Server", variables=None
+)
+dev_server = Server(
+    url="https://loa1jiqb4j.execute-api.ap-northeast-1.amazonaws.com/dev",
+    description="Development Server",
+    variables=None,
+)
+
+servers = []
+if STAGE == "local":
+    servers.append(local_server)
+if STAGE == "dev":
+    servers.append(dev_server)
+
 app = APIGatewayRestResolver(enable_validation=True)
 app.enable_swagger(
     path="/swagger",

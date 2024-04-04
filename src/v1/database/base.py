@@ -35,6 +35,8 @@ class BGLModel(Model):
         region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
+        else:
+            host = None
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
@@ -65,6 +67,8 @@ class Hba1cModel(Model):
         region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
+        else:
+            host = None
 
     id = UnicodeAttribute(null=False, default=generate_id)
     user_id = UnicodeAttribute(hash_key=True)
