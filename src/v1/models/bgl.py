@@ -5,7 +5,7 @@ from typing import List
 # Third Party Library
 from aws_lambda_powertools.event_handler.exceptions import NotFoundError
 from database.base import BGLModel
-from schemas.bgl import BGLCreateRequestSchema
+from schemas.bgl import BGLCreateRequestSchema, BGLUpdateRequestSchema
 
 
 def is_not_deleted(item: BGLModel) -> bool:
@@ -30,12 +30,17 @@ class BGLModelORM:
         except StopIteration:
             raise NotFoundError(f"BGL data not found with id: {id}")
 
-    def update_one(self, id: str, data: BGLCreateRequestSchema) -> BGLModel:
+    # NOTE: record time is sortkey, so we can't update it
+    def update_one(self, id: str, data: BGLUpdateRequestSchema) -> BGLModel:
         item = self.find_one(id)
-        item.value = data.value
-        item.event_timing = data.event_timing
-        item.record_time = data.record_time
-        item.save()
+        item.update(
+            actions=[
+                BGLModel.value.set(data.value),
+                BGLModel.event_timing.set(data.event_timing),
+                # BGLModel.record_time.set(datetime.now()),
+                BGLModel.updated_at.set(datetime.now()),
+            ]
+        )
         return item
 
     def delete_one(self, id: str) -> BGLModel:
