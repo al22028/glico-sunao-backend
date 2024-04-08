@@ -11,7 +11,7 @@ from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
 from database.base import BGLModel
 from models.bgl import BGLModelORM
-from schemas.bgl import BGLCreateRequestSchema, BGLSchema
+from schemas.bgl import BGLCreateRequestSchema, BGLSchema, BGLUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
@@ -86,7 +86,7 @@ def update_bgl_item(
             example="e7b45a9810317095d7ee6748af941d2",
         ),
     ],
-    item: BGLCreateRequestSchema,
+    item: BGLUpdateRequestSchema,
 ) -> BGLSchema:
     data = bgl.update_one(bglId, item)
     return data.serializer()
