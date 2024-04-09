@@ -8,8 +8,12 @@ from database.base import Hba1cModel
 from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cUpdateRequestSchema
 
 
-class Hba1cModelORM:
+def is_not_deleted(item: Hba1cModel) -> bool:
+    return not item.is_deleted
 
+
+class Hba1cModelORM:
+    #
     def find_all(self) -> List[Hba1cModel]:
         items = Hba1cModel.scan()
         return [item for item in items if not item.is_deleted]
@@ -27,7 +31,7 @@ class Hba1cModelORM:
             raise NotFoundError(f"Hba1c data not found with id: {id}")
 
     # NOTE: record time is sortkey, so we can't update it
-    def update_one(self, id: str, data: Hba1cCreateRequestSchema) -> Hba1cModel:
+    def update_one(self, id: str, data: Hba1cUpdateRequestSchema) -> Hba1cModel:
         item = self.find_one(id)
         item.update(
             actions=[
