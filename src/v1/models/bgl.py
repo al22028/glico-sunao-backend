@@ -8,10 +8,6 @@ from database.base import BGLModel
 from schemas.bgl import BGLCreateRequestSchema, BGLUpdateRequestSchema
 
 
-def is_not_deleted(item: BGLModel) -> bool:
-    return not item.is_deleted
-
-
 class BGLModelORM:
 
     def find_all(self) -> List[BGLModel]:
