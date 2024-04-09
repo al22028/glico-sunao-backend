@@ -11,7 +11,7 @@ from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
 from database.base import Hba1cModel
 from models.hba1c import Hba1cModelORM
-from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema
+from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema, Hba1cUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
@@ -86,7 +86,7 @@ def update_Hba1c_item(
             example="e7b45a9810317095d7ee6748af941d2",
         ),
     ],
-    item: Hba1cCreateRequestSchema,
+    item: Hba1cUpdateRequestSchema,
 ) -> Hba1cSchema:
     data = Hba1c.update_one(Hba1cId, item)
     return data.serializer()
