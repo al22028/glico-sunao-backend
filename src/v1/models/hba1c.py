@@ -8,10 +8,6 @@ from database.base import Hba1cModel
 from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cUpdateRequestSchema
 
 
-def is_not_deleted(item: Hba1cModel) -> bool:
-    return not item.is_deleted
-
-
 class Hba1cModelORM:
     #
     def find_all(self) -> List[Hba1cModel]:
