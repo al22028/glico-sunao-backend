@@ -14,17 +14,23 @@ class BGLUpdateRequestSchema(BaseSchema):
     event_timing: EventTiming = Field(
         ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.BEFORE_EXERCISE  # type: ignore
     )
-    record_time: datetime = Field(
-        ...,
-        title="記録時間",
-        description="ユーザーが計測した時間",
-        example="2021-08-21T08:00:00+09:00",  # type: ignore
-    )
+    # record_time: datetime = Field(
+    #     ...,
+    #     title="記録時間",
+    #     description="ユーザーが計測した時間",
+    #     example="2021-08-21T08:00:00+09:00",  # type: ignore
+    # )
 
 
 class BGLCreateRequestSchema(BGLUpdateRequestSchema):
     user_id: str = Field(
         ..., title="User ID", description="ユーザーのID", example="asds45a98103195d7ee6748af941d2"  # type: ignore
+    )
+    record_time: datetime = Field(
+        ...,
+        title="記録時間",
+        description="ユーザーが計測した時間",
+        example="2021-08-21T08:00:00+09:00",  # type: ignore
     )
 
 
