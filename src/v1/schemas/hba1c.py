@@ -39,7 +39,8 @@ class Hba1cSchema(Hba1cCreateRequestSchema):
         ..., title="ID", description="Hba1cデータのID", example="asds45a98103195d7ee6748af941d2"  # type: ignore
     )
     is_deleted: bool = Field(
-        ..., title="削除フラグ",
+        ...,
+        title="削除フラグ",
         description="削除されたかどうかのフラグ",
         example=False,  # type: ignore
     )
@@ -48,5 +49,7 @@ class Hba1cSchema(Hba1cCreateRequestSchema):
     )
     updated_at: datetime = Field(
         ...,
-        title="更新日時", description="データが最後に更新された日時", example="2021-08-21T08:00:00+09:00",  # type: ignore
+        title="更新日時",
+        description="データが最後に更新された日時",
+        example="2021-08-21T08:00:00+09:00",  # type: ignore
     )
