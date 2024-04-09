@@ -5,7 +5,7 @@ from typing import List
 # Third Party Library
 from aws_lambda_powertools.event_handler.exceptions import NotFoundError
 from database.base import Hba1cModel
-from schemas.hba1c import Hba1cCreateRequestSchema
+from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cUpdateRequestSchema
 
 
 class Hba1cModelORM:
@@ -26,12 +26,17 @@ class Hba1cModelORM:
         except StopIteration:
             raise NotFoundError(f"Hba1c data not found with id: {id}")
 
+    # NOTE: record time is sortkey, so we can't update it
     def update_one(self, id: str, data: Hba1cCreateRequestSchema) -> Hba1cModel:
         item = self.find_one(id)
-        item.value = data.value
-        item.event_timing = data.event_timing
-        item.record_time = data.record_time
-        item.save()
+        item.update(
+            actions=[
+                Hba1cModel.value.set(data.value),
+                Hba1cModel.event_timing.set(data.event_timing),
+                # Hba1cModel.record_time.set(datetime.now()),
+                Hba1cModel.updated_at.set(datetime.now()),
+            ]
+        )
         return item
 
     def delete_one(self, id: str) -> Hba1cModel:
