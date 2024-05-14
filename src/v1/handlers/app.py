@@ -1,16 +1,17 @@
 # Third Party Library
-from aws_lambda_powertools import Logger
+from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from config.api import STAGE
+from config.api import API_VERSION_HASH, STAGE
 from database.base import BGLModel, Hba1cModel
 from middlewares.common import handler_middleware
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
 from routes import bgl, hba1c
 
-logger = Logger()
+logger = Logger("ApplicationHandler")
+tracer = Tracer("ApplicationHandler")
 
 if STAGE == "local" or STAGE == "dev":
     if not BGLModel.exists():
@@ -36,11 +37,13 @@ if STAGE == "dev":
     servers.append(dev_server)
 
 app = APIGatewayRestResolver(enable_validation=True)
+
 app.enable_swagger(
     path="/swagger",
     title="Glico SUNAO 血糖値管理アプリAPI仕様書",
+    version=API_VERSION_HASH,
     summary="Glico SUNAO 血糖値管理アプリケーションのバックエンドAPIの仕様書です。",
-    description="""
+    description=f"""
 ![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOeSsMRCo0cMhs1bP4fb-1D45pii-LkGZcpg&s)
 ![SUNAOロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcdtPpgEs9hfDcMxq_WJEZk7pAkHVkYtx_EA&s)
 ![つばさ株式会社ロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUF74Gsbwzr3N9Rsjok_lGoYgAa_r8CSZE0lV_HqlAAw&s)
@@ -59,6 +62,11 @@ Glico SUNAO 血糖値管理アプリAPI仕様書。血糖値管理アプリケ�
 リクエストとレスポンスのフォーマットは、JSON 形式で提供されます。
 リクエストに関しての詳細は、各エンドポイントの仕様を参照してください。
 
+## APIのバージョン情報
+
+APIのバージョンは、`{API_VERSION_HASH}` です。このバージョンは、ローカルからデプロイされた場合`latest` になります。
+GitHub Actions によるCI/CD でデプロイされた場合は、コミットハッシュが付与されたバージョンになります。このバージョン情報は、ヘルスチェックエンドポイントで確認することもできます。
+
     """,
     contact=Contact(
         name="Takahashi Katsuyuki",
@@ -73,23 +81,62 @@ app.include_router(router=hba1c.router, prefix="/hba1c")
 
 
 class HealthCheckSchema(BaseModel):
-    status: str = Field(..., description="Health Check Status", example="ok")  # type: ignore
+    status: str = Field(
+        ...,
+        titile="ヘルスチェックステータス",
+        description="""
+Health Check Status
+""",
+        example="ok",
+    )  # type: ignore
+    version: str = Field(
+        ...,
+        title="APIのバージョン情報",
+        description="""
+## 概要
+
+APIのバージョン情報を提供します。
+
+## 詳細
+
+APIのバージョン情報を提供します。バージョン情報は、環境変数 `API_VERSION_HASH` に設定されている値を返します。
+ローカルからデプロイされた場合は、`latest` が返されます。もし、`GitHub Actions` でデプロイされた場合は、コミットハッシュの値を含む文字列が返されます。
+""",
+        example="latest",
+    )  # type: ignore
 
 
 @app.get(
     "/healthcheck",
     cors=True,
     summary="Health Check",
-    description="Check the health of the application.",
+    description="""
+## 概要
+
+サーバーの稼働状況とAPIのバージョン情報を取得します
+
+## 詳細
+
+基本的には常に Status Code 200: で`ok` が返却されます。
+それ以外の場合は、サーバーに問題が発生している可能性がありますのでお手数ですが、髙橋までご連絡ください。
+
+APIのバージョンに関しては、ローカルからデプロイされた場合`latest` になります。
+GitHub Actions によるCI/CD でデプロイされた場合は、コミットハッシュが付与されたバージョンになります。
+
+## 変更履歴
+- 2024/05/14: エンドポイントを追加
+- 2024/05/15: バージョン情報を追加
+""",
     response_description="Health Check",
     tags=["default"],
     operation_id="healthcheck",
 )
 def health_check() -> HealthCheckSchema:
-    return HealthCheckSchema(**{"status": "ok"})
+    return HealthCheckSchema(**{"status": "ok", "version": API_VERSION_HASH})
 
 
 @handler_middleware
+@tracer.capture_method
 @logger.inject_lambda_context(log_event=True)
 def lambda_handler(event: dict, context: LambdaContext) -> dict[str, str | int]:
     return app.resolve(event, context)

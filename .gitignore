@@ -36,3 +36,5 @@ htmlcov/
 
 # node
 node_modules/
+
+.env
