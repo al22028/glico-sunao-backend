@@ -109,7 +109,7 @@ def fetch_single_bgl_item(
 @router.post(
     "/",
     tags=["BGL"],
-    summary="血糖値データを作成",
+    summary="新規血糖値データを登録",
     description="""
 ## 概要
 
@@ -205,7 +205,6 @@ IDで指定された血糖値データを論理削除します。削除された
 ## 変更履歴
 
 - 2024/5/14: エンドポイントを追加
-
 """,
     response_description="削除したデータ",
     operation_id="deleteBGLItem",
