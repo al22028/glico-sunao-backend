@@ -11,7 +11,7 @@ from database.base import BGLModel, Hba1cModel
 from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
-from routes import bgl, hba1c
+from routes import bgl
 
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
@@ -83,7 +83,7 @@ GitHub Actions によるCI/CD でデプロイされた場合は、コミット�
 )
 
 app.include_router(router=bgl.router, prefix="/bgl")
-app.include_router(router=hba1c.router, prefix="/hba1c")
+# app.include_router(router=hba1c.router, prefix="/hba1c")
 
 
 class HealthCheckSchema(BaseModel):
