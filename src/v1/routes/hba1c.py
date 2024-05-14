@@ -1,5 +1,6 @@
 # Standard Library
 from datetime import datetime
+from http import HTTPStatus
 from typing import List
 
 # Third Party Library
@@ -10,6 +11,7 @@ from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
 from controllers.hba1c import Hba1cController
+from schemas import errors
 from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema, Hba1cUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
@@ -28,6 +30,12 @@ controller = Hba1cController()
     description="全てのHba1cデータを取得します。",
     response_description="取得したデータの配列",
     operation_id="fetchAllHba1cItems",
+    responses={
+        200: {"description": "全てのHba1cデータの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_all_Hba1c_items() -> List[Hba1cSchema]:
     return controller.find_all()  # type: ignore
@@ -41,6 +49,12 @@ def fetch_all_Hba1c_items() -> List[Hba1cSchema]:
     description="idで指定されたHba1cデータを取得します。",
     response_description="取得したデータ",
     operation_id="fetchSingleHba1cItems",
+    responses={
+        200: {"description": "特定のHba1cデータの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_single_Hba1c_item(
     Hba1cId: Annotated[
@@ -64,9 +78,15 @@ def fetch_single_Hba1c_item(
     description="Hba1cデータを新規作成します。",
     response_description="作成されたデータ",
     operation_id="createHba1cItem",
+    responses={
+        201: {"description": "新規Hba1cデータの登録に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def create_Hba1c_item(item: Hba1cCreateRequestSchema) -> Hba1cSchema:
-    return controller.create_one(item)
+    return controller.create_one(item), HTTPStatus.CREATED
 
 
 @tracer.capture_method
