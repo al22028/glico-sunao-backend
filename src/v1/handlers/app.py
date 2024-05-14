@@ -10,8 +10,8 @@ from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
 from routes import bgl, hba1c
 
-logger = Logger("Handlers")
-tracer = Tracer("Handlers")
+logger = Logger("ApplicationHandler")
+tracer = Tracer("ApplicationHandler")
 
 if STAGE == "local" or STAGE == "dev":
     if not BGLModel.exists():
@@ -37,11 +37,13 @@ if STAGE == "dev":
     servers.append(dev_server)
 
 app = APIGatewayRestResolver(enable_validation=True)
+
 app.enable_swagger(
     path="/swagger",
     title="Glico SUNAO 血糖値管理アプリAPI仕様書",
+    version=API_VERSION_HASH,
     summary="Glico SUNAO 血糖値管理アプリケーションのバックエンドAPIの仕様書です。",
-    description="""
+    description=f"""
 ![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOeSsMRCo0cMhs1bP4fb-1D45pii-LkGZcpg&s)
 ![SUNAOロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcdtPpgEs9hfDcMxq_WJEZk7pAkHVkYtx_EA&s)
 ![つばさ株式会社ロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUF74Gsbwzr3N9Rsjok_lGoYgAa_r8CSZE0lV_HqlAAw&s)
@@ -59,6 +61,11 @@ Glico SUNAO 血糖値管理アプリAPI仕様書。血糖値管理アプリケ�
 
 リクエストとレスポンスのフォーマットは、JSON 形式で提供されます。
 リクエストに関しての詳細は、各エンドポイントの仕様を参照してください。
+
+## APIのバージョン情報
+
+APIのバージョンは、`{API_VERSION_HASH}` です。このバージョンは、ローカルからデプロイされた場合`latest` になります。
+GitHub Actions によるCI/CD でデプロイされた場合は、コミットハッシュが付与されたバージョンになります。このバージョン情報は、ヘルスチェックエンドポイントで確認することもできます。
 
     """,
     contact=Contact(
