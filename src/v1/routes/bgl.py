@@ -1,5 +1,6 @@
 # Standard Library
 from datetime import datetime
+from http import HTTPStatus
 from typing import List
 
 # Third Party Library
@@ -10,6 +11,7 @@ from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
 from controllers.bgl import BGLController
+from schemas import errors
 from schemas.bgl import BGLCreateRequestSchema, BGLSchema, BGLUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
@@ -25,6 +27,12 @@ controller = BGLController()
     description="全ての血糖値データを取得します。",
     response_description="取得したデータの配列",
     operation_id="fetchAllBGLItems",
+    responses={
+        200: {"description": "全ての血糖値データの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_all_bgl_items() -> List[BGLSchema]:
     return controller.find_all()  # type: ignore
@@ -34,9 +42,30 @@ def fetch_all_bgl_items() -> List[BGLSchema]:
     "/<bglId>",
     tags=["BGL"],
     summary="特定の血糖値データを取得",
-    description="idで指定された血糖値データを取得します。",
+    description="""
+## 概要
+
+idで指定された血糖値データを取得します。
+
+## 詳細
+
+idで指定された血糖値データを取得します。取得したいBGLのデータIDを指定してください。
+特定のデータが見つからない場合は、`404 Not Found`が返されます。
+
+特定の血糖値データを取得するためのエンドポイントですが、詳細情報がないので、このエンドポイントはあまり使われることを想定していません。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータ",
     operation_id="fetchSingleBGLItems",
+    responses={
+        200: {"description": "特定の血糖値データの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_single_bgl_item(
     bglId: Annotated[
@@ -56,21 +85,64 @@ def fetch_single_bgl_item(
     "/",
     tags=["BGL"],
     summary="血糖値データを作成",
-    description="血糖値データを新規作成します。",
+    description="""
+## 概要
+
+血糖値データを新規に登録します。
+
+## 詳細
+
+血糖値データを新規に登録します。登録するデータは、`BGLCreateRequestSchema`を参照してください。
+データの登録に成功した場合は、登録したデータが返されます。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="作成されたデータ",
     operation_id="createBGLItem",
+    responses={
+        201: {"description": "新規の血糖値データの作成に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def create_bgl_item(item: BGLCreateRequestSchema) -> BGLSchema:
-    return controller.create_one(item)
+    return controller.create_one(item), HTTPStatus.CREATED
 
 
 @router.put(
     "/<bglId>",
     tags=["BGL"],
     summary="特定の血糖値データを更新",
-    description="idで指定された血糖値データを更新します。",
+    description="""
+## 概要
+
+idで指定された血糖値データを更新します。
+
+## 詳細
+
+idで指定された血糖値データを更新します。更新するデータは、`BGLUpdateRequestSchema`を参照してください。
+
+## 仕様
+
+変更に関して、`dynamodb`の仕様により、`range key`の変更ができない仕様になります。
+そのため、更新は実質的に削除と新規作成の組み合わせとなります。
+よって、**データのIDが変更されることに注意**してください。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="更新されたデータ",
     operation_id="updateBGLItem",
+    responses={
+        200: {"description": "血糖値データの更新に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def update_bgl_item(
     bglId: Annotated[
@@ -94,6 +166,12 @@ def update_bgl_item(
     description="idで指定された血糖値データを削除します。",
     response_description="削除したデータ",
     operation_id="deleteBGLItem",
+    responses={
+        200: {"description": "データの論理削除に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def delete_bgl_item(
     bglId: Annotated[
