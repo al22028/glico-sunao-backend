@@ -108,8 +108,21 @@ def fetch_single_Hba1c_item(
 @router.post(
     "/",
     tags=["Hba1c"],
-    summary="Hba1cデータを作成",
-    description="Hba1cデータを新規作成します。",
+    summary="新規Hba1cデータを登録",
+    description="""
+## 概要
+
+Hba1cデータを新規に登録します。
+
+## 詳細
+
+Hba1cデータを新規に登録します。登録するデータは、`Hba1cCreateRequestSchema`を参照してください。
+データの登録に成功した場合は、登録したデータが返されます。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="作成されたデータ",
     operation_id="createHba1cItem",
     responses={

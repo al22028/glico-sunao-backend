@@ -109,7 +109,7 @@ def fetch_single_bgl_item(
 @router.post(
     "/",
     tags=["BGL"],
-    summary="血糖値データを作成",
+    summary="新規血糖値データを登録",
     description="""
 ## 概要
 
