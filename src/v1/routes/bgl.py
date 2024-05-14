@@ -205,7 +205,6 @@ IDで指定された血糖値データを論理削除します。削除された
 ## 変更履歴
 
 - 2024/5/14: エンドポイントを追加
-
 """,
     response_description="削除したデータ",
     operation_id="deleteBGLItem",
