@@ -4,7 +4,7 @@ from http import HTTPStatus
 from typing import List
 
 # Third Party Library
-# from aws_lambda_powertools import Tracer
+from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
@@ -19,7 +19,11 @@ router = Router()
 
 controller = BGLController()
 
+logger = Logger("BGLAPI")
+tracer = Tracer("BGLAPI")
 
+
+@tracer.capture_method
 @router.get(
     "/",
     tags=["BGL"],
@@ -57,6 +61,7 @@ def fetch_all_bgl_items() -> List[BGLSchema]:
     return controller.find_all()  # type: ignore
 
 
+@tracer.capture_method
 @router.get(
     "/<bglId>",
     tags=["BGL"],
@@ -100,6 +105,7 @@ def fetch_single_bgl_item(
     return controller.find_one(bglId)
 
 
+@tracer.capture_method
 @router.post(
     "/",
     tags=["BGL"],
@@ -131,6 +137,7 @@ def create_bgl_item(item: BGLCreateRequestSchema) -> BGLSchema:
     return controller.create_one(item), HTTPStatus.CREATED
 
 
+@tracer.capture_method
 @router.put(
     "/<bglId>",
     tags=["BGL"],
@@ -178,6 +185,7 @@ def update_bgl_item(
     return controller.update_one(bglId, item)
 
 
+@tracer.capture_method
 @router.delete(
     "/<bglId>",
     tags=["BGL"],
@@ -222,6 +230,7 @@ def delete_bgl_item(
     return controller.delete_one(bglId)
 
 
+@tracer.capture_method
 @router.get(
     "/query",
     tags=["BGL"],
