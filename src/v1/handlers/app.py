@@ -1,12 +1,13 @@
 # Third Party Library
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
-from aws_lambda_powertools.event_handler.openapi.models import Server
+from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from config.api import STAGE
 from database.base import BGLModel, Hba1cModel
 from middlewares.common import handler_middleware
 from pydantic import BaseModel, Field
+from pydantic.networks import AnyUrl
 from routes import bgl, hba1c
 
 logger = Logger()
@@ -37,9 +38,33 @@ if STAGE == "dev":
 app = APIGatewayRestResolver(enable_validation=True)
 app.enable_swagger(
     path="/swagger",
-    title="Glico SUNAO Application API",
-    summary="Documentation Glico SUNAO Application API",
-    description="This is the API documentation for Glico SUNAO Application API.",
+    title="Glico SUNAO 血糖値管理アプリAPI仕様書",
+    summary="Glico SUNAO 血糖値管理アプリケーションのバックエンドAPIの仕様書です。",
+    description="""
+![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLWJpHKgo4ZaOW3GZmy0iev3_D7IHmAI8_jA&s)
+![SUNAOロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcdtPpgEs9hfDcMxq_WJEZk7pAkHVkYtx_EA&s)
+![つばさ株式会社ロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUF74Gsbwzr3N9Rsjok_lGoYgAa_r8CSZE0lV_HqlAAw&s)
+
+## 概要
+
+Glico SUNAO 血糖値管理アプリAPI仕様書。血糖値管理アプリケーションのバックエンドAPIを提供します。
+
+## 仕様書について
+
+仕様書（ドキュメント）の生成は、AWS Lambda Powertools の OpenAPI version 3.1.0 仕様書を使用し、半自動で生成されています。
+もし、APIについての質問や提案があれば、髙橋までご連絡ください。
+
+## リクエストとレスポンスのフォーマット
+
+リクエストとレスポンスのフォーマットは、JSON 形式で提供されます。
+リクエストに関しての詳細は、各エンドポイントの仕様を参照してください。
+
+    """,
+    contact=Contact(
+        name="Takahashi Katsuyuki",
+        email="takahashi.k@world-wing.com",
+        url=AnyUrl("https://github.com/kkml4220"),
+    ),
     servers=servers,
 )
 
