@@ -9,14 +9,13 @@ from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
-from database.base import Hba1cModel
-from models.hba1c import Hba1cModelORM
+from controllers.hba1c import Hba1cController
 from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema, Hba1cUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
 
-Hba1c = Hba1cModelORM()
+controller = Hba1cController()
 
 
 @router.get(
@@ -28,8 +27,7 @@ Hba1c = Hba1cModelORM()
     operation_id="fetchAllHba1cItems",
 )
 def fetch_all_Hba1c_items() -> List[Hba1cSchema]:
-    items = Hba1c.find_all()
-    return [item.serializer() for item in items]
+    return controller.find_all()  # type: ignore
 
 
 @router.get(
@@ -51,8 +49,7 @@ def fetch_single_Hba1c_item(
         ),
     ]
 ) -> Hba1cSchema:
-    data = Hba1c.find_one(Hba1cId)
-    return data.serializer()
+    return controller.find_one(Hba1cId)
 
 
 @router.post(
@@ -64,8 +61,7 @@ def fetch_single_Hba1c_item(
     operation_id="createHba1cItem",
 )
 def create_Hba1c_item(item: Hba1cCreateRequestSchema) -> Hba1cSchema:
-    data = Hba1c.create_one(item)
-    return data.serializer()
+    return controller.create_one(item)
 
 
 @router.put(
@@ -88,8 +84,7 @@ def update_Hba1c_item(
     ],
     item: Hba1cUpdateRequestSchema,
 ) -> Hba1cSchema:
-    data = Hba1c.update_one(Hba1cId, item)
-    return data.serializer()
+    return controller.update_one(Hba1cId, item)
 
 
 @router.delete(
@@ -111,8 +106,7 @@ def delete_Hba1c_item(
         ),
     ],
 ) -> Hba1cSchema:
-    data = Hba1c.delete_one(Hba1cId)
-    return data.serializer()
+    return controller.delete_one(Hba1cId)
 
 
 @router.get(
@@ -160,5 +154,4 @@ def fetch_Hba1c_items_by_user_id(
             raise BadRequestError("Invalid date range. Start date should be less than end date")
     except ValueError:
         raise BadRequestError("Invalid date format. Please use YYYYMMDD format")
-    items: List[Hba1cModel] = Hba1c.find_many_by_user_id(userId, __from, __to)
-    return [item.serializer() for item in items]
+    return controller.find_many_by_user_id(userId, __from, __to)  # type: ignore
