@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 
 # Third Party Library
-# from aws_lambda_powertools import Tracer
+from aws_lambda_powertools import Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
@@ -15,9 +15,12 @@ from schemas.hba1c import Hba1cCreateRequestSchema, Hba1cSchema, Hba1cUpdateRequ
 app = APIGatewayRestResolver(debug=True)
 router = Router()
 
+tracer = Tracer("Hba1cAPI")
+
 controller = Hba1cController()
 
 
+@tracer.capture_method
 @router.get(
     "/",
     tags=["Hba1c"],
@@ -30,6 +33,7 @@ def fetch_all_Hba1c_items() -> List[Hba1cSchema]:
     return controller.find_all()  # type: ignore
 
 
+@tracer.capture_method
 @router.get(
     "/<Hba1cId>",
     tags=["Hba1c"],
@@ -52,6 +56,7 @@ def fetch_single_Hba1c_item(
     return controller.find_one(Hba1cId)
 
 
+@tracer.capture_method
 @router.post(
     "/",
     tags=["Hba1c"],
@@ -64,6 +69,7 @@ def create_Hba1c_item(item: Hba1cCreateRequestSchema) -> Hba1cSchema:
     return controller.create_one(item)
 
 
+@tracer.capture_method
 @router.put(
     "/<Hba1cId>",
     tags=["Hba1c"],
@@ -87,6 +93,7 @@ def update_Hba1c_item(
     return controller.update_one(Hba1cId, item)
 
 
+@tracer.capture_method
 @router.delete(
     "/<Hba1cId>",
     tags=["Hba1c"],
@@ -109,6 +116,7 @@ def delete_Hba1c_item(
     return controller.delete_one(Hba1cId)
 
 
+@tracer.capture_method
 @router.get(
     "/query",
     tags=["Hba1c"],
