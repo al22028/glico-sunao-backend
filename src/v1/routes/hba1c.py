@@ -26,8 +26,27 @@ controller = Hba1cController()
 @router.get(
     "/",
     tags=["Hba1c"],
-    summary="全てのHba1cデータを取得",
-    description="全てのHba1cデータを取得します。",
+    summary="開発用：全てのHba1cデータを取得",
+    description="""
+## 概要
+
+全てのHba1cデータを取得します。
+
+こちらは開発用のエンドポイントです。本番環境で使用されることを想定していません。
+
+## 詳細
+
+全てのHba1cデータを取得します。取得したデータは、`Hba1cSchema`を参照してください。
+もし、データが存在しない場合は、空の配列が返されます。
+
+## 仕様
+
+論理削除済みのデータはこれに含まれません。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータの配列",
     operation_id="fetchAllHba1cItems",
     responses={
@@ -46,7 +65,22 @@ def fetch_all_Hba1c_items() -> List[Hba1cSchema]:
     "/<Hba1cId>",
     tags=["Hba1c"],
     summary="特定のHba1cデータを取得",
-    description="idで指定されたHba1cデータを取得します。",
+    description="""
+## 概要
+
+idで指定されたHba1cデータを取得します。
+
+## 詳細
+
+idで指定されたHba1cデータを取得します。取得したいHba1cのデータIDを指定してください。
+指定されたデータが見つからない場合は、`404 Not Found`が返されます。
+
+特定のHba1cデータを取得するためのエンドポイントですが、詳細情報がないので、このエンドポイントはあまり使われることを想定していません。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータ",
     operation_id="fetchSingleHba1cItems",
     responses={
