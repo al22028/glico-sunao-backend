@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, timedelta
 from http import HTTPStatus
 from typing import List
 
@@ -162,6 +162,12 @@ idで指定されたHba1cデータを更新します。更新するデータは�
 """,
     response_description="更新されたデータ",
     operation_id="updateHba1cItem",
+    responses={
+        200: {"description": "特定のHba1cデータの更新に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def update_Hba1c_item(
     Hba1cId: Annotated[
@@ -201,6 +207,12 @@ IDで指定されたHba1cデータを論理削除します。削除されたデ�
 """,
     response_description="削除したデータ",
     operation_id="deleteHba1cItem",
+    responses={
+        200: {"description": "特定のHba1cデータの論理削除に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def delete_Hba1c_item(
     Hba1cId: Annotated[
@@ -221,8 +233,33 @@ def delete_Hba1c_item(
     "/query",
     tags=["Hba1c"],
     summary="クエリパラメータを使ったデータの取得",
+    description="""
+## 概要
+
+クエリパラメータを使って、特定のユーザーの期間内におけるHba1cデータを取得します。
+
+## 詳細
+
+クエリパラメータを使って、特定のユーザーの期間内におけるHba1cデータを取得します。
+
+## 仕様
+
+取得できるデータは、指定されたユーザーIDに紐づくデータのみです。
+また、指定された期間内のデータのみ取得されます。
+指定された期間は、開始日と終了日の両方が含まれます。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータの配列",
     operation_id="queryHba1cItems",
+    responses={
+        200: {"description": "指定されたデータの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_Hba1c_items_by_user_id(
     userId: Annotated[
@@ -241,7 +278,7 @@ def fetch_Hba1c_items_by_user_id(
             alias="from",
             title="範囲開始日",
             description="取得したいデータの範囲開始日",
-            example="20240317",
+            example=(datetime.now() - timedelta(days=7)).strftime("%Y%m%d"),
         ),
     ],
     _to: Annotated[
@@ -251,7 +288,7 @@ def fetch_Hba1c_items_by_user_id(
             alias="to",
             title="範囲終了日",
             description="取得したいデータの範囲終了日",
-            example="20240319",
+            example=datetime.now().strftime("%Y%m%d"),
         ),
     ],
 ) -> List[Hba1cSchema]:

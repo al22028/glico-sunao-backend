@@ -19,7 +19,7 @@ class Hba1cUpdateRequestSchema(BaseSchema):
         ...,
         title="記録時間",
         description="ユーザーが計測した時間",
-        examples=datetime.now().isoformat(),  # type: ignore
+        example=datetime.now().isoformat(),  # type: ignore
     )
 
 
