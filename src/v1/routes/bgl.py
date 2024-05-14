@@ -123,7 +123,7 @@ def delete_bgl_item(
     operation_id="queryBGLItems",
 )
 def fetch_bgl_items_by_user_id(
-    user_id: Annotated[
+    userId: Annotated[
         str,
         Query(
             ...,
@@ -160,5 +160,5 @@ def fetch_bgl_items_by_user_id(
             raise BadRequestError("Invalid date range. Start date should be less than end date")
     except ValueError:
         raise BadRequestError("Invalid date format. Please use YYYYMMDD format")
-    items: List[BGLModel] = bgl.find_many_by_user_id(user_id, __from, __to)
+    items: List[BGLModel] = bgl.find_many_by_user_id(userId, __from, __to)
     return [item.serializer() for item in items]
