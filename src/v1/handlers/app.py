@@ -41,7 +41,7 @@ app.enable_swagger(
     title="Glico SUNAO 血糖値管理アプリAPI仕様書",
     summary="Glico SUNAO 血糖値管理アプリケーションのバックエンドAPIの仕様書です。",
     description="""
-![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLWJpHKgo4ZaOW3GZmy0iev3_D7IHmAI8_jA&s)
+![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOeSsMRCo0cMhs1bP4fb-1D45pii-LkGZcpg&s)
 ![SUNAOロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcdtPpgEs9hfDcMxq_WJEZk7pAkHVkYtx_EA&s)
 ![つばさ株式会社ロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUF74Gsbwzr3N9Rsjok_lGoYgAa_r8CSZE0lV_HqlAAw&s)
 
