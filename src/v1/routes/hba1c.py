@@ -141,7 +141,25 @@ def create_Hba1c_item(item: Hba1cCreateRequestSchema) -> Hba1cSchema:
     "/<Hba1cId>",
     tags=["Hba1c"],
     summary="特定のHba1cデータを更新",
-    description="idで指定されたHba1cデータを更新します。",
+    description="""
+## 概要
+
+idで指定されたHba1cデータを更新します。
+
+## 詳細
+
+idで指定されたHba1cデータを更新します。更新するデータは、`Hba1cUpdateRequestSchema`を参照してください。
+
+## 仕様
+
+変更に関して、`dynamodb`の仕様により、`range key`の変更ができない仕様になります。
+そのため、更新は実質的に削除と新規作成の組み合わせとなります。
+よって、**データのIDが変更されることに注意**してください。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="更新されたデータ",
     operation_id="updateHba1cItem",
 )
