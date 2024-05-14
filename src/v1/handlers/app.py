@@ -1,3 +1,6 @@
+# Standard Library
+from typing import List
+
 # Third Party Library
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
@@ -30,14 +33,14 @@ dev_server = Server(
     variables=None,
 )
 
-servers = []
+servers: List[Server] = []
 if STAGE == "local":
     servers.append(local_server)
 if STAGE == "dev":
     servers.append(dev_server)
 
-app = APIGatewayRestResolver(enable_validation=True)
 
+app = APIGatewayRestResolver(enable_validation=True)
 # ミドルウェアの登録
 app.use(middlewares=[log_request_response, cors_middleware])
 
