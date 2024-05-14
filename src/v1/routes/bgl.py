@@ -42,11 +42,12 @@ tracer = Tracer("BGLAPI")
 
 ## 仕様
 
-論理削除済みのデータはこれに含まれません。
+<strike>論理削除済みのデータはこれに含まれません。</strike>
 
 ## 変更履歴
 
 - 2024/5/14: エンドポイントを追加
+- 2024/5/15: 論理削除済みのデータを含めるように仕様変更
 """,
     response_description="取得したデータの配列",
     operation_id="fetchAllBGLItems",
