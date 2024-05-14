@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, timedelta
 from http import HTTPStatus
 from typing import List
 
@@ -226,8 +226,33 @@ def delete_bgl_item(
     "/query",
     tags=["BGL"],
     summary="クエリパラメータを使ったデータの取得",
+    description="""
+## 概要
+
+クエリパラメータを使って、特定のユーザーの期間内における血糖値データを取得します。
+
+## 詳細
+
+クエリパラメータを使って、特定のユーザーの期間内における血糖値データを取得します。
+
+## 仕様
+
+取得できるデータは、指定されたユーザーIDに紐づくデータのみです。
+また、指定された期間内のデータのみ取得されます。
+指定された期間は、開始日と終了日の両方が含まれます。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータの配列",
     operation_id="queryBGLItems",
+    responses={
+        200: {"description": "指定されたデータの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
 def fetch_bgl_items_by_user_id(
     userId: Annotated[
@@ -246,7 +271,7 @@ def fetch_bgl_items_by_user_id(
             alias="from",
             title="範囲開始日",
             description="取得したいデータの範囲開始日",
-            example="20240317",
+            example=(datetime.now() - timedelta(days=7)).strftime("%Y%m%d"),
         ),
     ],
     _to: Annotated[
@@ -256,7 +281,7 @@ def fetch_bgl_items_by_user_id(
             alias="to",
             title="範囲終了日",
             description="取得したいデータの範囲終了日",
-            example="20240319",
+            example=datetime.now().strftime("%Y%m%d"),
         ),
     ],
 ) -> List[BGLSchema]:
