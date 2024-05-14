@@ -1,9 +1,9 @@
 # Standard Library
 from datetime import datetime
-from uuid import uuid4
 
 # Third Party Library
 from config.api import STAGE
+from helper.generator import generate_id
 from pynamodb.attributes import (
     BooleanAttribute,
     NumberAttribute,
@@ -18,15 +18,6 @@ from schemas.hba1c import Hba1cSchema
 
 # NOTE: This is local endpoint for DynamoDB
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
-
-
-def generate_id() -> str:
-    """Generate a unique id
-
-    Returns:
-        str: generated id without hyphen
-    """
-    return str(uuid4()).replace("-", "")
 
 
 class BGLModel(Model):
