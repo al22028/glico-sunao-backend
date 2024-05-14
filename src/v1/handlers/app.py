@@ -1,3 +1,6 @@
+# Standard Library
+from typing import List
+
 # Third Party Library
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
@@ -5,7 +8,7 @@ from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from config.api import API_VERSION_HASH, STAGE
 from database.base import BGLModel, Hba1cModel
-from middlewares.common import handler_middleware
+from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
 from routes import bgl, hba1c
@@ -30,13 +33,16 @@ dev_server = Server(
     variables=None,
 )
 
-servers = []
+servers: List[Server] = []
 if STAGE == "local":
     servers.append(local_server)
 if STAGE == "dev":
     servers.append(dev_server)
 
+
 app = APIGatewayRestResolver(enable_validation=True)
+# ミドルウェアの登録
+app.use(middlewares=[log_request_response, cors_middleware])
 
 app.enable_swagger(
     path="/swagger",
@@ -87,8 +93,8 @@ class HealthCheckSchema(BaseModel):
         description="""
 Health Check Status
 """,
-        example="ok",
-    )  # type: ignore
+        example="ok",  # type: ignore
+    )
     version: str = Field(
         ...,
         title="APIのバージョン情報",
@@ -102,8 +108,8 @@ APIのバージョン情報を提供します。
 APIのバージョン情報を提供します。バージョン情報は、環境変数 `API_VERSION_HASH` に設定されている値を返します。
 ローカルからデプロイされた場合は、`latest` が返されます。もし、`GitHub Actions` でデプロイされた場合は、コミットハッシュの値を含む文字列が返されます。
 """,
-        example="latest",
-    )  # type: ignore
+        example="latest",  # type: ignore
+    )
 
 
 @app.get(
@@ -136,7 +142,7 @@ def health_check() -> HealthCheckSchema:
 
 
 @handler_middleware
-@tracer.capture_method
+@tracer.capture_lambda_handler
 @logger.inject_lambda_context(log_event=True)
 def lambda_handler(event: dict, context: LambdaContext) -> dict[str, str | int]:
     return app.resolve(event, context)
