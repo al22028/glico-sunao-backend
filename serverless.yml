@@ -1,6 +1,6 @@
 useDotenv: true
 
-service: glico-sunao-backend
+service: glico-sunao-api-backend
 frameworkVersion: "3"
 
 plugins:
@@ -103,6 +103,7 @@ provider:
     # api config
     STAGE: ${opt:stage, self:custom.default.stage}
     API_VERSION_HASH: ${env:API_VERSION_HASH, "latest"}
+    APP_API_BASE_URL: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APP_API_BASE_URL}
     APP_API_CORS_ALLOWED_ORIGINS: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APP_API_CORS_ALLOWED_ORIGINS}
     # lambda powertools config
     POWERTOOLS_LOG_LEVEL: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_LOG_LEVEL}
@@ -122,6 +123,7 @@ package:
 
 functions:
   ApplicationApiHandler:
+    name: ${self:service}-api-handler
     description: Glico SUNAO Application API Handler
     handler: src/v1/handlers/app.lambda_handler
     events:
