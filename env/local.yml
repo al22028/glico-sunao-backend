@@ -1,5 +1,5 @@
 # api config
-APP_API_CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3005,http://localhost:5173"
+APP_API_CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3005"
 
 # lambda powertools config
 POWERTOOLS_SERVICE_NAME: "api-local"

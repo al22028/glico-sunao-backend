@@ -2,12 +2,12 @@ name: CI/CD for development
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - dev/main
-      - main
+  # pull_request:
+  #   types:
+  #     - closed
+  #   branches:
+  #     - dev/main
+  #     - main
 
 jobs:
   deploy:
