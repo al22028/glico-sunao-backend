@@ -6,7 +6,7 @@ from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from config.api import API_VERSION_HASH, STAGE
+from config.api import API_VERSION_HASH, APP_API_BASE_URL, STAGE
 from database.base import BGLModel, Hba1cModel
 from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
@@ -28,7 +28,7 @@ local_server = Server(
     url="http://localhost:3333", description="Local Development Server", variables=None
 )
 dev_server = Server(
-    url="https://5v3zfa18l1.execute-api.ap-northeast-1.amazonaws.com/dev",
+    url=APP_API_BASE_URL,
     description="Development Server",
     variables=None,
 )
