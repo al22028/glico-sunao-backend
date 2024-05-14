@@ -23,8 +23,27 @@ controller = BGLController()
 @router.get(
     "/",
     tags=["BGL"],
-    summary="全ての血糖値データを取得",
-    description="全ての血糖値データを取得します。",
+    summary="開発用：全ての血糖値データを取得",
+    description="""
+## 概要
+
+全ての血糖値データを取得します。
+
+こちらは開発用のエンドポイントです。本番環境で使用されることを想定していません。
+
+## 詳細
+
+全ての血糖値データを取得します。取得したデータは、`BGLSchema`を参照してください。
+もし、データが存在しない場合は、空の配列が返されます。
+
+## 仕様
+
+論理削除済みのデータはこれに含まれません。
+
+## 変更履歴
+
+- 2024/5/14: エンドポイントを追加
+""",
     response_description="取得したデータの配列",
     operation_id="fetchAllBGLItems",
     responses={
