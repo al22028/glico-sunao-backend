@@ -1,14 +1,13 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 
 # Third Party Library
-from aws_lambda_powertools.event_handler.exceptions import NotFoundError
 from database.base import BGLModel
 from schemas.bgl import BGLCreateRequestSchema, BGLUpdateRequestSchema
 
 
-class BGLModelORM:
+class BGLRepository:
 
     def find_all(self) -> List[BGLModel]:
         items = BGLModel.scan()
@@ -19,24 +18,23 @@ class BGLModelORM:
         item.save()
         return item
 
-    def find_one(self, id: str) -> BGLModel:
+    def is_exist(self, id: str) -> bool:
         item = BGLModel.scan(BGLModel.id == id, limit=1)
         try:
-            return item.next()
+            item.next()
+            return True
         except StopIteration:
-            raise NotFoundError(f"BGL data not found with id: {id}")
+            return False
 
-    # NOTE: record time is sortkey, so we can't update it
+    def find_one(self, id: str) -> BGLModel:
+        return BGLModel.scan(BGLModel.id == id, limit=1).next()
+
     def update_one(self, id: str, data: BGLUpdateRequestSchema) -> BGLModel:
         item = self.find_one(id)
-        item.update(
-            actions=[
-                BGLModel.value.set(data.value),
-                BGLModel.event_timing.set(data.event_timing),
-                # BGLModel.record_time.set(datetime.now()),
-                BGLModel.updated_at.set(datetime.now()),
-            ]
-        )
+        user_id = item.user_id
+        item.delete()
+        item = BGLModel(**data.model_dump(), user_id=user_id)
+        item.save()
         return item
 
     def delete_one(self, id: str) -> BGLModel:
@@ -46,7 +44,8 @@ class BGLModelORM:
         return item
 
     def find_many_by_user_id(self, user_id: str, _from: datetime, _to: datetime) -> List[BGLModel]:
+        adjusted_to = _to + timedelta(days=1)
         items = BGLModel.query(
-            hash_key=user_id, range_key_condition=BGLModel.record_time.between(_from, _to)
+            hash_key=user_id, range_key_condition=BGLModel.record_time.between(_from, adjusted_to)
         )
         return [item for item in items if not item.is_deleted]

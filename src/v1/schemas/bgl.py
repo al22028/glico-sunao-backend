@@ -2,6 +2,7 @@
 from datetime import datetime
 
 # Third Party Library
+from helper.generator import generate_id
 from pydantic import Field
 from schemas.base import BaseSchema
 from schemas.event_timing import EventTiming
@@ -14,29 +15,23 @@ class BGLUpdateRequestSchema(BaseSchema):
     event_timing: EventTiming = Field(
         ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.BEFORE_EXERCISE  # type: ignore
     )
-    # record_time: datetime = Field(
-    #     ...,
-    #     title="記録時間",
-    #     description="ユーザーが計測した時間",
-    #     example="2021-08-21T08:00:00+09:00",  # type: ignore
-    # )
-
-
-class BGLCreateRequestSchema(BGLUpdateRequestSchema):
-    user_id: str = Field(
-        ..., title="User ID", description="ユーザーのID", example="asds45a98103195d7ee6748af941d2"  # type: ignore
-    )
     record_time: datetime = Field(
         ...,
         title="記録時間",
         description="ユーザーが計測した時間",
-        example="2021-08-21T08:00:00+09:00",  # type: ignore
+        example=datetime.now().isoformat(),  # type: ignore
+    )
+
+
+class BGLCreateRequestSchema(BGLUpdateRequestSchema):
+    user_id: str = Field(
+        ..., title="User ID", description="ユーザーのID", example=generate_id()  # type: ignore
     )
 
 
 class BGLSchema(BGLCreateRequestSchema):
     id: str = Field(
-        ..., title="ID", description="BGLデータのID", example="e7b45a9810317095d7ee6748af941d2"  # type: ignore
+        ..., title="ID", description="BGLデータのID", example=generate_id()  # type: ignore
     )
     is_deleted: bool = Field(
         ...,
@@ -45,8 +40,8 @@ class BGLSchema(BGLCreateRequestSchema):
         example=False,  # type: ignore
     )
     created_at: datetime = Field(
-        ..., title="作成日時", description="データが作成された日時", example="2021-08-21T08:00:00+09:00"  # type: ignore
+        ..., title="作成日時", description="データが作成された日時", example=datetime.now().isoformat()  # type: ignore
     )
     updated_at: datetime = Field(
-        ..., title="更新日時", description="データが最後に更新された日時", example="2021-08-21T08:00:00+09:00"  # type: ignore
+        ..., title="更新日時", description="データが最後に更新された日時", example=datetime.now().isoformat()  # type: ignore
     )

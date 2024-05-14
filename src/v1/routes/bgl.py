@@ -9,14 +9,13 @@ from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.event_handler.openapi.params import Path, Query
 from aws_lambda_powertools.shared.types import Annotated
-from database.base import BGLModel
-from models.bgl import BGLModelORM
+from controllers.bgl import BGLController
 from schemas.bgl import BGLCreateRequestSchema, BGLSchema, BGLUpdateRequestSchema
 
 app = APIGatewayRestResolver(debug=True)
 router = Router()
 
-bgl = BGLModelORM()
+controller = BGLController()
 
 
 @router.get(
@@ -28,8 +27,7 @@ bgl = BGLModelORM()
     operation_id="fetchAllBGLItems",
 )
 def fetch_all_bgl_items() -> List[BGLSchema]:
-    items = bgl.find_all()
-    return [item.serializer() for item in items]
+    return controller.find_all()  # type: ignore
 
 
 @router.get(
@@ -51,8 +49,7 @@ def fetch_single_bgl_item(
         ),
     ]
 ) -> BGLSchema:
-    data = bgl.find_one(bglId)
-    return data.serializer()
+    return controller.find_one(bglId)
 
 
 @router.post(
@@ -64,8 +61,7 @@ def fetch_single_bgl_item(
     operation_id="createBGLItem",
 )
 def create_bgl_item(item: BGLCreateRequestSchema) -> BGLSchema:
-    data = bgl.create_one(item)
-    return data.serializer()
+    return controller.create_one(item)
 
 
 @router.put(
@@ -88,8 +84,7 @@ def update_bgl_item(
     ],
     item: BGLUpdateRequestSchema,
 ) -> BGLSchema:
-    data = bgl.update_one(bglId, item)
-    return data.serializer()
+    return controller.update_one(bglId, item)
 
 
 @router.delete(
@@ -111,8 +106,7 @@ def delete_bgl_item(
         ),
     ],
 ) -> BGLSchema:
-    data = bgl.delete_one(bglId)
-    return data.serializer()
+    return controller.delete_one(bglId)
 
 
 @router.get(
@@ -160,5 +154,4 @@ def fetch_bgl_items_by_user_id(
             raise BadRequestError("Invalid date range. Start date should be less than end date")
     except ValueError:
         raise BadRequestError("Invalid date format. Please use YYYYMMDD format")
-    items: List[BGLModel] = bgl.find_many_by_user_id(userId, __from, __to)
-    return [item.serializer() for item in items]
+    return controller.find_many_by_user_id(userId, __from, __to)  # type: ignore
