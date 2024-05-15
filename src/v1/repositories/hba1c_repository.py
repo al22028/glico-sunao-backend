@@ -11,7 +11,7 @@ class Hba1cRepository:
 
     def find_all(self) -> List[Hba1cModel]:
         items = Hba1cModel.scan()
-        return [item for item in items if not item.is_deleted]
+        return list(items)
 
     def create_one(self, data: Hba1cCreateRequestSchema) -> Hba1cModel:
         item = Hba1cModel(**data.model_dump())

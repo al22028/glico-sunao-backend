@@ -11,7 +11,7 @@ class BGLRepository:
 
     def find_all(self) -> List[BGLModel]:
         items = BGLModel.scan()
-        return [item for item in items if not item.is_deleted]
+        return list(items)
 
     def create_one(self, data: BGLCreateRequestSchema) -> BGLModel:
         item = BGLModel(**data.model_dump())
