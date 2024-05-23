@@ -32,8 +32,10 @@ class Hba1cRepository:
     def update_one(self, id: str, data: Hba1cUpdateRequestSchema) -> Hba1cModel:
         item = self.find_one(id)
         user_id = item.user_id
+        id = item.id
+        created_at = item.created_at
         item.delete()
-        item = Hba1cModel(**data.model_dump(), user_id=user_id)
+        item = Hba1cModel(**data.model_dump(), user_id=user_id, id=id, created_at=created_at)
         item.save()
         return item
 
