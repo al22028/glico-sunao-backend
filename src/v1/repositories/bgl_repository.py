@@ -32,8 +32,10 @@ class BGLRepository:
     def update_one(self, id: str, data: BGLUpdateRequestSchema) -> BGLModel:
         item = self.find_one(id)
         user_id = item.user_id
+        id = item.id
+        created_at = item.created_at
         item.delete()
-        item = BGLModel(**data.model_dump(), user_id=user_id)
+        item = BGLModel(**data.model_dump(), user_id=user_id, id=id, created_at=created_at)
         item.save()
         return item
 
