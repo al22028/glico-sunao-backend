@@ -82,8 +82,3 @@ class Hba1cModel(Model):
             "updated_at": self.updated_at.isoformat(),
         }
         return Hba1cSchema(**serialized_data)
-
-
-if __name__ == "__main__":
-    BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-    Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
