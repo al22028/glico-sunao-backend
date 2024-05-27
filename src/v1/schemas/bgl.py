@@ -13,7 +13,7 @@ class BGLUpdateRequestSchema(BaseSchema):
         ..., title="血糖値の値(mg/dl)", description="実際に計測したユーザーの血糖値の値(mg/dl)", ge=0.0, example=89.0  # type: ignore
     )
     event_timing: EventTiming = Field(
-        ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.BEFORE_EXERCISE  # type: ignore
+        ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.AFTER_MEAL  # type: ignore
     )
     record_time: datetime = Field(
         ...,

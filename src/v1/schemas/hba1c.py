@@ -13,7 +13,7 @@ class Hba1cUpdateRequestSchema(BaseSchema):
         ..., title="Hba1cの値(%)", description="実際に計測したユーザーのHba1cの値(%)", ge=0.0, example=5.5  # type: ignore
     )
     event_timing: EventTiming = Field(
-        ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.BEFORE_EXERCISE  # type: ignore
+        ..., title="時間帯", description="ユーザーが計測した時間帯", example=EventTiming.AFTER_MEAL  # type: ignore
     )
     record_time: datetime = Field(
         ...,
