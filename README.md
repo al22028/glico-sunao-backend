@@ -84,6 +84,10 @@ docker compose down
 - できるだけレビューする(誰かにしてもらう)
 - ビルドやデプロイなどは別途検討
 
+### ER Diagram
+
+- https://github.com/world-wing/glico-sunao-backend/wiki
+
 ### Commit message
 
 Please refer to the following template for the commit message.
