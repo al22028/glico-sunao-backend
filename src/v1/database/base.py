@@ -84,6 +84,7 @@ class Hba1cModel(Model):
         }
         return Hba1cSchema(**serialized_data)
 
+
 class UserModel(Model):
     class Meta:
         table_name = "User"
@@ -105,6 +106,6 @@ class UserModel(Model):
             "agreed_at": self.agreed_at.isoformat(),
             "is_deleted": self.is_deleted,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
         }
         return UserSchema(**serialized_data)

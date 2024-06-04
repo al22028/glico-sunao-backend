@@ -4,6 +4,7 @@ from typing import List
 # Third Party Library
 from database.base import UserModel
 
+
 class UserRepository:
 
     def find_all(self) -> List[UserModel]:
