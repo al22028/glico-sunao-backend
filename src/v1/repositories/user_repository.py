@@ -4,7 +4,7 @@ from typing import List
 
 # Third Party Library
 from database.base import UserModel
-from schemas.user import UserCreateRequestSchema, UserUpdateRequestSchema
+from schemas.user import UserCreateRequestSchema
 
 
 class UserRepository:
