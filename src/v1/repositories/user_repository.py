@@ -12,6 +12,9 @@ class UserRepository:
         items = UserModel.scan()
         return list(items)
 
+    def find_one(self, id: str) -> UserModel:
+        return UserModel.scan(UserModel.id == id, limit=1).next()
+
     def create_one(self, data: UserCreateRequestSchema) -> UserModel:
         item = UserModel(**data.model_dump())
         item.save()

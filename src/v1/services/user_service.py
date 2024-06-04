@@ -15,6 +15,10 @@ class UserService:
         items = self.repository.find_all()
         return [item.serializer() for item in items]
 
+    def find_one(self, id: str) -> UserSchema:
+        data = self.repository.find_one(id)
+        return data.serializer()
+
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
         item = self.repository.create_one(data)
         return item.serializer()

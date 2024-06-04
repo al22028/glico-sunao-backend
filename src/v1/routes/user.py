@@ -44,6 +44,33 @@ def find_all() -> List[UserSchema]:
     return controller.find_all()  # type: ignore
 
 
+@router.get(
+    "/<Id>",
+    tags=["User"],
+    summary="IDを指定してユーザーデータを取得",
+    description="""
+## 概要
+
+IDを指定してユーザーデータを取得します。
+
+## 変更履歴
+
+- 2024/6/4: エンドポイントを追加
+""",
+    response_description="ユーザーデータの取得に成功",
+    operation_id="fetchUserDataById",
+    responses={
+        200: {"description": "ユーザーデータの取得に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        404: errors.NOT_FOUND_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
+)
+def find_one(id: str) -> UserSchema:
+    return controller.find_one(id)
+
+
 @router.post(
     "/",
     tags=["User"],

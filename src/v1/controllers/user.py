@@ -14,5 +14,8 @@ class UserController:
     def find_all(self) -> List[UserSchema]:
         return self.service.find_all()  # type: ignore
 
+    def find_one(self, id: str) -> UserSchema:
+        return self.service.find_one(id)
+
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
         return self.service.create_one(data)
