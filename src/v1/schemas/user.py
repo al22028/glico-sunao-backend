@@ -5,28 +5,28 @@ from datetime import datetime
 from pydantic import Field
 from schemas.base import BaseSchema
 
+
 class UserUpdateRequestSchema(BaseSchema):
     agreed_at: datetime = Field(
         ...,
         title="同意日時",
         description="規約に同意した日時",
-        example=datetime.now().isoformat() # type: ignore
+        example="0001-01-01T00:00:00.000000",  # type: ignore
     )
+
 
 class UserCreateRequestSchema(UserUpdateRequestSchema):
     id: str = Field(
-        ...,
-        title="ID",
-        description="ユーザーを識別するID",
-        example="000001" # type: ignore
+        ..., title="ID", description="ユーザーを識別するID", example="000001"  # type: ignore
     )
 
+
 class UserSchema(UserCreateRequestSchema):
-    is_deleted: datetime = Field(
+    is_deleted: bool = Field(
         ...,
         title="削除フラグ",
         description="削除されたかどうかのフラグ",
-        example=datetime.now().isoformat() # type: ignore
+        example=False,  # type: ignore
     )
     created_at: datetime = Field(
         ..., title="作成日時", description="データが作成された日時", example=datetime.now().isoformat()  # type: ignore
