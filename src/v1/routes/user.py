@@ -45,7 +45,7 @@ def find_all() -> List[UserSchema]:
 
 
 @router.get(
-    "/<Id>",
+    "/<id>",
     tags=["User"],
     summary="IDを指定してユーザーデータを取得",
     description="""
@@ -100,3 +100,14 @@ def find_one(id: str) -> UserSchema:
 )
 def create_one(data: UserCreateRequestSchema) -> UserSchema:
     return controller.create_one(data)
+
+@router.patch(
+    "/<id>",
+    tags=["User"],
+    summary="ユーザーを規約同意済みに更新",
+    description="""
+## 概要
+
+ユーザーを規約同意済みに更新します。
+"""
+)

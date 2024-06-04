@@ -22,3 +22,7 @@ class UserService:
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
         item = self.repository.create_one(data)
         return item.serializer()
+
+    def update_agreed_at(self, id: str) -> UserSchema:
+        item = self.repository.update_agreed_at(id)
+        return item.serializer()

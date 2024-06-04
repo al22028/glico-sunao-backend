@@ -1,5 +1,6 @@
 # Standard Library
 from typing import List
+from datetime import datetime
 
 # Third Party Library
 from database.base import UserModel
@@ -17,5 +18,11 @@ class UserRepository:
 
     def create_one(self, data: UserCreateRequestSchema) -> UserModel:
         item = UserModel(**data.model_dump())
+        item.save()
+        return item
+
+    def update_agreed_at(self, id: str) -> UserModel:
+        item = self.find_one(id)
+        item.agreed_at = datetime.now().isoformat()
         item.save()
         return item

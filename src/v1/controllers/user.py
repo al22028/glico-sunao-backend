@@ -19,3 +19,6 @@ class UserController:
 
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
         return self.service.create_one(data)
+
+    def update_agreed_at(self, id: str) -> UserSchema:
+        return self.service.update_agreed_at(id)
