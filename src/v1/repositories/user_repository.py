@@ -1,10 +1,10 @@
 # Standard Library
-from typing import List
 from datetime import datetime
+from typing import List
 
 # Third Party Library
 from database.base import UserModel
-from schemas.user import UserCreateRequestSchema
+from schemas.user import UserCreateRequestSchema, UserUpdateRequestSchema
 
 
 class UserRepository:
@@ -23,6 +23,6 @@ class UserRepository:
 
     def update_agreed_at(self, id: str) -> UserModel:
         item = self.find_one(id)
-        item.agreed_at = datetime.now().isoformat()
+        item.agreed_at = datetime.now()
         item.save()
         return item

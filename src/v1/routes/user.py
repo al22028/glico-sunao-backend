@@ -101,13 +101,29 @@ def find_one(id: str) -> UserSchema:
 def create_one(data: UserCreateRequestSchema) -> UserSchema:
     return controller.create_one(data)
 
+
 @router.patch(
     "/<id>",
     tags=["User"],
-    summary="ユーザーを規約同意済みに更新",
+    summary="ユーザーを規約同意済み状態に更新",
     description="""
 ## 概要
 
-ユーザーを規約同意済みに更新します。
-"""
+ユーザーを規約同意済み状態に更新します。
+
+## 詳細
+
+`agreed_at`を現在時刻に更新します。
+""",
+    response_description="ユーザーを規約同意済み状態に更新",
+    operation_id="updateIntoAgreed",
+    responses={
+        200: {"description": "ユーザーを規約同意済み状態に更新"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        404: errors.NOT_FOUND_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
 )
+def update_agreed_at(id: str) -> UserSchema:
+    return controller.update_agreed_at(id)
