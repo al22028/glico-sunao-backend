@@ -114,6 +114,10 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
 ## 詳細
 
 `agreed_at`を現在時刻に更新します。
+
+## 変更履歴
+
+- 2024/6/4: エンドポイントを追加
 """,
     response_description="ユーザーを規約同意済み状態に更新",
     operation_id="updateIntoAgreed",
