@@ -15,8 +15,8 @@ from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
 from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
 from schemas.hba1c import Hba1cSchema
-from schemas.user import UserSchema
 from schemas.sunao_foods import SunaoFoods
+from schemas.user import UserSchema
 
 # NOTE: This is local endpoint for DynamoDB
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
