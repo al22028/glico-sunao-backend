@@ -5,7 +5,6 @@ from typing import List
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
-from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from controllers.user import UserController
 from schemas import errors
 from schemas.user import UserSchema
