@@ -15,6 +15,7 @@ from pynamodb_attributes.unicode_enum import UnicodeEnumAttribute
 from schemas.bgl import BGLSchema
 from schemas.event_timing import EventTiming
 from schemas.hba1c import Hba1cSchema
+from schemas.user import UserSchema
 
 # NOTE: This is local endpoint for DynamoDB
 DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
@@ -82,3 +83,28 @@ class Hba1cModel(Model):
             "updated_at": self.updated_at.isoformat(),
         }
         return Hba1cSchema(**serialized_data)
+
+class UserModel(Model):
+    class Meta:
+        table_name = "User"
+        region = "ap-north-east-1"
+        if STAGE == "local":
+            host = DYNAMODB_LOCAL_ENDPOINT
+        else:
+            host = None
+
+    id = UnicodeAttribute(null=False, hash_key=True)
+    agreed_at = UTCDateTimeAttribute(default=datetime.now)
+    is_deleted = BooleanAttribute(default=False)
+    created_at = UTCDateTimeAttribute(default=datetime.now)
+    updated_at = UTCDateTimeAttribute(default=datetime.now)
+
+    def serializer(self) -> UserSchema:
+        serialized_data = {
+            "id": self.id,
+            "agreed_at": self.agreed_at.isoformat(),
+            "is_deleted": self.is_deleted,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }
+        return UserSchema(**serialized_data)

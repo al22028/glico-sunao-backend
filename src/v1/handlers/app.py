@@ -7,11 +7,11 @@ from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from config.api import API_VERSION_HASH, APP_API_BASE_URL, STAGE
-from database.base import BGLModel, Hba1cModel
+from database.base import BGLModel, Hba1cModel, UserModel
 from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
-from routes import bgl, hba1c
+from routes import bgl, hba1c, user
 
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
@@ -23,6 +23,9 @@ if STAGE == "local" or STAGE == "dev":
     if not Hba1cModel.exists():
         logger.info("Creating Hba1cModel table")
         Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    if not UserModel.exists():
+        logger.info("Creating UserModel table")
+        UserModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 local_server = Server(
     url="http://localhost:3333", description="Local Development Server", variables=None
@@ -84,6 +87,7 @@ GitHub Actions によるCI/CD でデプロイされた場合は、コミット�
 
 app.include_router(router=bgl.router, prefix="/bgl")
 app.include_router(router=hba1c.router, prefix="/hba1c")
+app.include_router(router=user.router, prefix="/user")
 
 
 class HealthCheckSchema(BaseModel):
