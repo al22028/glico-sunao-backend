@@ -67,8 +67,8 @@ IDを指定してユーザーデータを取得します。
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def find_one(id: str) -> UserSchema:
-    return controller.find_one(id)
+def find_one(user_id: str) -> UserSchema:
+    return controller.find_one(user_id)
 
 
 @router.post(
@@ -102,8 +102,8 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
     return controller.create_one(data)
 
 
-@router.patch(
-    "/<id>",
+@router.put(
+    "/<userId>",
     tags=["User"],
     summary="ユーザーを規約同意済み状態に更新",
     description="""
@@ -113,7 +113,8 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
 
 ## 詳細
 
-`agreed_at`を現在時刻に更新します。
+`term_agreed`を`True`に更新します。
+`term_agreed_at`を現在時刻に更新します。
 
 ## 変更履歴
 
@@ -129,5 +130,5 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def update_agreed_at(id: str) -> UserSchema:
-    return controller.update_agreed_at(id)
+def update_agreed_at(user_id: str) -> UserSchema:
+    return controller.update_term_agreed_at(user_id)

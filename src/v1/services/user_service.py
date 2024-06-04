@@ -15,14 +15,14 @@ class UserService:
         items = self.repository.find_all()
         return [item.serializer() for item in items]
 
-    def find_one(self, id: str) -> UserSchema:
-        data = self.repository.find_one(id)
+    def find_one(self, user_id: str) -> UserSchema:
+        data = self.repository.find_one(user_id)
         return data.serializer()
 
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
         item = self.repository.create_one(data)
         return item.serializer()
 
-    def update_agreed_at(self, id: str) -> UserSchema:
-        item = self.repository.update_agreed_at(id)
+    def update_term_agreed_at(self, user_id: str) -> UserSchema:
+        item = self.repository.update_term_agreed_at(user_id)
         return item.serializer()
