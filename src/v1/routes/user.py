@@ -45,7 +45,7 @@ def find_all() -> List[UserSchema]:
 
 
 @router.get(
-    "/<Id>",
+    "/<id>",
     tags=["User"],
     summary="IDを指定してユーザーデータを取得",
     description="""
