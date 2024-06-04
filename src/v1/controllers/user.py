@@ -2,7 +2,7 @@
 from typing import List
 
 # Third Party Library
-from schemas.user import UserSchema
+from schemas.user import UserCreateRequestSchema, UserSchema
 from services.user_service import UserService
 
 
@@ -13,3 +13,6 @@ class UserController:
 
     def find_all(self) -> List[UserSchema]:
         return self.service.find_all()  # type: ignore
+
+    def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
+        return self.service.create_one(data)
