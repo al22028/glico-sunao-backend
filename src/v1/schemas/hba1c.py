@@ -6,6 +6,7 @@ from helper.generator import generate_id
 from pydantic import Field
 from schemas.base import BaseSchema
 from schemas.event_timing import EventTiming
+from schemas.sunao_foods import SunaoFoods
 
 
 class Hba1cUpdateRequestSchema(BaseSchema):
@@ -20,6 +21,12 @@ class Hba1cUpdateRequestSchema(BaseSchema):
         title="記録時間",
         description="ユーザーが計測した時間",
         example=datetime.now().isoformat(),  # type: ignore
+    )
+    sunao_food: SunaoFoods = Field(
+        ...,
+        title="SUNAO商品の摂取",
+        description="SUNAO商品の摂取の有無",
+        example=SunaoFoods.PASTA,  # type: ignore
     )
 
 
