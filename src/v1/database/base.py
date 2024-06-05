@@ -93,7 +93,7 @@ class Hba1cModel(Model):
 class UserModel(Model):
     class Meta:
         table_name = "User"
-        region = "ap-north-east-1"
+        region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
         else:
