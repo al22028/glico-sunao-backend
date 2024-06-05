@@ -36,7 +36,7 @@ class BGLModel(Model):
     value = NumberAttribute(default=0.0)
     event_timing = UnicodeEnumAttribute(enum_type=EventTiming)
     record_time = UTCDateTimeAttribute(default=datetime.now, range_key=True)
-    sunao_food = UnicodeEnumAttribute(enum_type=SunaoFoods)
+    sunao_food = UnicodeEnumAttribute(enum_type=SunaoFoods, null=True, default=None)
     is_deleted = BooleanAttribute(default=False)
     created_at = UTCDateTimeAttribute(default=datetime.now)
     updated_at = UTCDateTimeAttribute(default=datetime.now)
@@ -47,7 +47,7 @@ class BGLModel(Model):
             "user_id": self.user_id,
             "value": self.value,
             "event_timing": self.event_timing.value,
-            "sunao_food": self.sunao_food.value,
+            "sunao_food": self.sunao_food,
             "is_deleted": self.is_deleted,
             "record_time": self.record_time.isoformat(),
             "created_at": self.created_at.isoformat(),
@@ -70,7 +70,7 @@ class Hba1cModel(Model):
     value = NumberAttribute(default=0.0)
     event_timing = UnicodeEnumAttribute(enum_type=EventTiming)
     record_time = UTCDateTimeAttribute(default=datetime.now, range_key=True)
-    sunao_food = UnicodeEnumAttribute(enum_type=SunaoFoods)
+    sunao_food = UnicodeEnumAttribute(enum_type=SunaoFoods, null=True, default=None)
     is_deleted = BooleanAttribute(default=False)
     created_at = UTCDateTimeAttribute(default=datetime.now)
     updated_at = UTCDateTimeAttribute(default=datetime.now)
@@ -81,7 +81,7 @@ class Hba1cModel(Model):
             "user_id": self.user_id,
             "value": self.value,
             "event_timing": self.event_timing.value,
-            "sunao_food": self.sunao_food.value,
+            "sunao_food": self.sunao_food,
             "is_deleted": self.is_deleted,
             "record_time": self.record_time.isoformat(),
             "created_at": self.created_at.isoformat(),
