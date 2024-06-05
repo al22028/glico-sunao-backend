@@ -25,5 +25,6 @@ class UserRepository:
         item = self.find_one(user_id)
         item.term_agreed = True
         item.term_agreed_at = datetime.now()
+        item.updated_at = datetime.now()
         item.save()
         return item

@@ -45,7 +45,7 @@ def find_all() -> List[UserSchema]:
 
 
 @router.get(
-    "/<id>",
+    "/<userId>",
     tags=["User"],
     summary="IDを指定してユーザーデータを取得",
     description="""
@@ -67,8 +67,8 @@ IDを指定してユーザーデータを取得します。
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def find_one(user_id: str) -> UserSchema:
-    return controller.find_one(user_id)
+def find_one(userId: str) -> UserSchema:
+    return controller.find_one(userId)
 
 
 @router.post(
@@ -102,7 +102,7 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
     return controller.create_one(data)
 
 
-@router.put(
+@router.patch(
     "/<userId>",
     tags=["User"],
     summary="ユーザーを規約同意済み状態に更新",
@@ -130,5 +130,5 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def update_agreed_at(user_id: str) -> UserSchema:
-    return controller.update_term_agreed_at(user_id)
+def update_term_agreed_at(userId: str) -> UserSchema:
+    return controller.update_term_agreed_at(userId)
