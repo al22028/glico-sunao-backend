@@ -22,8 +22,8 @@ class BGLUpdateRequestSchema(BaseSchema):
         description="ユーザーが計測した時間",
         example=datetime.now().isoformat(),  # type: ignore
     )
-    sunao_food: SunaoFoods = Field(
-        ...,
+    sunao_food: SunaoFoods | None = Field(
+        default=None,
         title="SUNAO商品の摂取",
         description="SUNAO商品の摂取の有無",
         example=SunaoFoods.PASTA,  # type: ignore
