@@ -45,7 +45,7 @@ def find_all() -> List[UserSchema]:
 
 
 @router.get(
-    "/<id>",
+    "/<userId>",
     tags=["User"],
     summary="IDを指定してユーザーデータを取得",
     description="""
@@ -67,8 +67,8 @@ IDを指定してユーザーデータを取得します。
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def find_one(id: str) -> UserSchema:
-    return controller.find_one(id)
+def find_one(userId: str) -> UserSchema:
+    return controller.find_one(userId)
 
 
 @router.post(
@@ -100,3 +100,35 @@ def find_one(id: str) -> UserSchema:
 )
 def create_one(data: UserCreateRequestSchema) -> UserSchema:
     return controller.create_one(data)
+
+
+@router.patch(
+    "/<userId>",
+    tags=["User"],
+    summary="ユーザーを規約同意済み状態に更新",
+    description="""
+## 概要
+
+ユーザーを規約同意済み状態に更新します。
+
+## 詳細
+
+`term_agreed`を`True`に更新します。
+`term_agreed_at`を現在時刻に更新します。
+
+## 変更履歴
+
+- 2024/6/4: エンドポイントを追加
+""",
+    response_description="ユーザーを規約同意済み状態に更新",
+    operation_id="updateIntoAgreed",
+    responses={
+        200: {"description": "ユーザーを規約同意済み状態に更新"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        404: errors.NOT_FOUND_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
+)
+def update_term_agreed_at(userId: str) -> UserSchema:
+    return controller.update_term_agreed_at(userId)

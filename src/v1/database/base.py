@@ -99,16 +99,18 @@ class UserModel(Model):
         else:
             host = None
 
-    id = UnicodeAttribute(null=False, hash_key=True)
-    agreed_at = UTCDateTimeAttribute(default=datetime.now)
+    user_id = UnicodeAttribute(null=False, hash_key=True)
+    term_agreed = BooleanAttribute(default=False)
+    term_agreed_at = UTCDateTimeAttribute(default=datetime.now)
     is_deleted = BooleanAttribute(default=False)
     created_at = UTCDateTimeAttribute(default=datetime.now)
     updated_at = UTCDateTimeAttribute(default=datetime.now)
 
     def serializer(self) -> UserSchema:
         serialized_data = {
-            "id": self.id,
-            "agreed_at": self.agreed_at.isoformat(),
+            "user_id": self.user_id,
+            "term_agreed": self.term_agreed,
+            "term_agreed_at": self.term_agreed_at.isoformat(),
             "is_deleted": self.is_deleted,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),

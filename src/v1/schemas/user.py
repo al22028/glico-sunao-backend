@@ -7,7 +7,13 @@ from schemas.base import BaseSchema
 
 
 class UserUpdateRequestSchema(BaseSchema):
-    agreed_at: datetime = Field(
+    term_agreed: bool = Field(
+        ...,
+        title="同意フラグ",
+        description="規約に同意したかを表すフラグ",
+        example=False,  # type: ignore
+    )
+    term_agreed_at: datetime = Field(
         ...,
         title="同意日時",
         description="規約に同意した日時",
@@ -16,7 +22,7 @@ class UserUpdateRequestSchema(BaseSchema):
 
 
 class UserCreateRequestSchema(UserUpdateRequestSchema):
-    id: str = Field(
+    user_id: str = Field(
         ..., title="ID", description="ユーザーを識別するID", example="000001"  # type: ignore
     )
 
