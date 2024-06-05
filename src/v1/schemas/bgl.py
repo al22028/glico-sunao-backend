@@ -1,5 +1,6 @@
 # Standard Library
 from datetime import datetime
+from typing import Optional
 
 # Third Party Library
 from helper.generator import generate_id
@@ -22,7 +23,7 @@ class BGLUpdateRequestSchema(BaseSchema):
         description="ユーザーが計測した時間",
         example=datetime.now().isoformat(),  # type: ignore
     )
-    sunao_food: SunaoFoods = Field(
+    sunao_food: Optional[SunaoFoods] = Field(
         ...,
         title="SUNAO商品の摂取",
         description="SUNAO商品の摂取の有無",
