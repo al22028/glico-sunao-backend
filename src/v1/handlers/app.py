@@ -14,6 +14,7 @@ from middlewares.common import cors_middleware, handler_middleware, log_request_
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
 from routes import bgl, hba1c, user
+from schemas.log_schema import LogSchema
 
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
@@ -150,15 +151,14 @@ def health_check() -> HealthCheckSchema:
 
 
 @app.post(
-    "/logs/<userId>",
+    "/logs/<userId>/qr",
     cors=True,
     summary="ログを取得",
     description="""QRコードのログをS3に保存するエンドポイント""",
 )
-def save_logs_to_s3(userId: str) -> dict[str, str]:
-    body = app.current_event["body"]
+def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
     now = datetime.now().isoformat()
-    s3_client.put_object(key=f"logs/{userId}/{now}.txt", body=body.encode())
+    s3_client.put_object(key=f"logs/{userId}/{now}.txt", body=log_data.model_dump_json().encode())
     return {"message": f"Logs saved to S3 by {userId}"}
 
 
