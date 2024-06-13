@@ -154,6 +154,7 @@ def health_check() -> HealthCheckSchema:
     "/logs/<userId>/qr",
     cors=True,
     summary="ログを取得",
+    operation_id="saveLogsToS3",
     description="""QRコードのログをS3に保存するエンドポイント""",
 )
 def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
