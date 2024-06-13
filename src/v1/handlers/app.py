@@ -158,7 +158,7 @@ def health_check() -> HealthCheckSchema:
 )
 def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
     now = datetime.now().isoformat()
-    s3_client.put_object(key=f"logs/{userId}/{now}.txt", body=log_data.model_dump_json().encode())
+    s3_client.put_object(key=f"logs/{userId}/{now}.json", body=log_data.model_dump_json().encode())
     return {"message": f"Logs saved to S3 by {userId}"}
 
 
