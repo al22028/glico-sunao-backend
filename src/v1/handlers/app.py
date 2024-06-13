@@ -1,7 +1,9 @@
 # Standard Library
+from datetime import datetime
 from typing import List
 
 # Third Party Library
+from aws.s3_client import S3Client
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
@@ -12,9 +14,12 @@ from middlewares.common import cors_middleware, handler_middleware, log_request_
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
 from routes import bgl, hba1c, user
+from schemas.log_schema import LogSchema
 
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
+
+s3_client = S3Client()
 
 if STAGE == "local" or STAGE == "dev":
     if not BGLModel.exists():
@@ -93,7 +98,7 @@ app.include_router(router=user.router, prefix="/user")
 class HealthCheckSchema(BaseModel):
     status: str = Field(
         ...,
-        titile="ヘルスチェックステータス",
+        title="ヘルスチェックステータス",
         description="""
 Health Check Status
 """,
@@ -143,6 +148,18 @@ GitHub Actions によるCI/CD でデプロイされた場合は、コミット�
 )
 def health_check() -> HealthCheckSchema:
     return HealthCheckSchema(**{"status": "ok", "version": API_VERSION_HASH})
+
+
+@app.post(
+    "/logs/<userId>/qr",
+    cors=True,
+    summary="ログを取得",
+    description="""QRコードのログをS3に保存するエンドポイント""",
+)
+def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
+    now = datetime.now().isoformat()
+    s3_client.put_object(key=f"logs/{userId}/{now}.json", body=log_data.model_dump_json().encode())
+    return {"message": f"Logs saved to S3 by {userId}"}
 
 
 @handler_middleware
