@@ -11,7 +11,7 @@ from database.base import BGLModel, Hba1cModel, UserModel
 from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
-from routes import bgl, hba1c, user, bgl_and_hba1c
+from routes import bgl, bgl_and_hba1c, hba1c, user
 
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
