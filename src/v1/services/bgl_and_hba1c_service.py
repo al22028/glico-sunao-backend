@@ -12,7 +12,6 @@ from schemas.hba1c import Hba1cSchema
 
 # BGLの要素のみを代入する関数
 def make_append_bgl_item(bgl_item: BGLSchema) -> BGLAndHba1cSchema:
-    # BGLリストの先頭の要素を挿入
     return BGLAndHba1cSchema(
         id=generate_id(),
         record_time=bgl_item.record_time,
@@ -25,7 +24,6 @@ def make_append_bgl_item(bgl_item: BGLSchema) -> BGLAndHba1cSchema:
 
 # HbA1cの要素のみを代入する関数
 def make_append_hba1c_item(hba1c_item: Hba1cSchema) -> BGLAndHba1cSchema:
-    # HbA1cリストの先頭の要素を挿入
     return BGLAndHba1cSchema(
         id=generate_id(),
         record_time=hba1c_item.record_time,
@@ -53,17 +51,17 @@ class BGLAndHba1cService:
         # BGLとHbA1cを結合したデータを入れるリストを定義
         combined_items: List[BGLAndHba1cSchema] = []
 
-        # 1つ以上要素が残っている間
+        # BGLかHbA1cどちらかに要素が残っている間
         while bgl_items or hba1c_items:
 
-            # BGLデータが空のとき
+            # BGLリストが空のとき
             if not bgl_items:
                 # HbA1cリストの先頭の要素を挿入
                 combined_items.append(make_append_hba1c_item(hba1c_items[0]))
                 hba1c_items.pop(0)
                 continue
 
-            # HbA1cデータが空のとき
+            # HbA1cリストが空のとき
             if not hba1c_items:
                 # BGLリストの先頭の要素を挿入
                 combined_items.append(make_append_bgl_item(bgl_items[0]))
