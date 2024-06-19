@@ -1,6 +1,6 @@
 useDotenv: true
 
-service: glico-sunao-api-backend
+service: gsp
 frameworkVersion: "3"
 
 plugins:
@@ -87,11 +87,12 @@ provider:
   # NOTE: Serverless Deployment Bucket Configuration
   # LINK - https://www.serverless.com/plugins/serverless-deployment-bucket
   deploymentBucket:
-    name: ${self:service}-deployment-bucket-${self:provider.stage}
+    name: ${self:service}-${self:provider.stage}-${self:custom.app.name}-deployment-bucket
     serverSideEncryption: AES256
 
   iam:
     role:
+      name: ${self:service}-${self:provider.stage}-${self:custom.app.name}-apifunction-role
       statements:
         - Effect: Allow
           Action:
@@ -127,9 +128,9 @@ package:
     - src/**
 
 functions:
-  ApplicationApiHandler:
+  crud-apifunction:
     name: ${self:service}-api-handler
-    description: Glico SUNAO Application API Handler
+    description: SUNAO血糖値レコーディング API Handler
     handler: src/v1/handlers/app.lambda_handler
     events:
       - http:
