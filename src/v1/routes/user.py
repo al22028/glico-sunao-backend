@@ -21,11 +21,12 @@ tracer = Tracer("UserAPI")
 @router.get(
     "/",
     tags=["User"],
-    summary="全てのユーザーデータを取得",
+    summary="開発用：全てのユーザーデータを取得",
     description="""
 ## 概要
 
-全てのユーザーデータを取得します。
+開発用に全てのユーザーデータを取得します。
+このエンドポイントは開発用途のみで使用してください。
 
 ## 変更履歴
 
@@ -82,8 +83,7 @@ def find_one(userId: str) -> UserSchema:
 
 ## 詳細
 
-ユーザーデータ登録時は`agreed_at`の値を西暦1年1月1日としています。<br/>
-これが規約にまだ同意していないことを表します。
+ユーザーが規約に同意したかどうかを表す`termAgreed`を受け取り、ユーザーデータを登録します。
 
 ## 変更履歴
 
@@ -92,7 +92,7 @@ def find_one(userId: str) -> UserSchema:
     response_description="ユーザーデータの登録に成功",
     operation_id="createUserData",
     responses={
-        200: {"description": "ユーザーデータの登録に成功"},
+        201: {"description": "ユーザーデータの登録に成功"},
         400: errors.BAD_REQUEST_ERROR,
         401: errors.UNAUTHORIZED_ERROR,
         500: errors.INTERNAL_SERVER_ERROR,
@@ -113,15 +113,14 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
 
 ## 詳細
 
-`term_agreed`を`True`に更新します。
-`term_agreed_at`を現在時刻に更新します。
+`termAgreedAt`の値を現在時刻に更新します。
 
 ## 変更履歴
 
 - 2024/6/4: エンドポイントを追加
 """,
     response_description="ユーザーを規約同意済み状態に更新",
-    operation_id="updateIntoAgreed",
+    operation_id="updateUserTermStatus",
     responses={
         200: {"description": "ユーザーを規約同意済み状態に更新"},
         400: errors.BAD_REQUEST_ERROR,
@@ -132,3 +131,31 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
 )
 def update_term_agreed_at(userId: str) -> UserSchema:
     return controller.update_term_agreed_at(userId)
+
+
+@router.delete(
+    "/<userId>",
+    tags=["User"],
+    summary="ユーザーを論理削除",
+    description="""
+## 概要
+
+ユーザーを論理削除します。
+
+## 変更履歴
+
+- 2024/6/19: エンドポイントを追加
+
+""",
+    response_description="ユーザーの論理削除に成功",
+    operation_id="deleteUserData",
+    responses={
+        200: {"description": "ユーザーの論理削除に成功"},
+        400: errors.BAD_REQUEST_ERROR,
+        401: errors.UNAUTHORIZED_ERROR,
+        404: errors.NOT_FOUND_ERROR,
+        500: errors.INTERNAL_SERVER_ERROR,
+    },
+)
+def delete_single_user(userId: str) -> UserSchema:
+    return controller.delete_single_user(userId)
