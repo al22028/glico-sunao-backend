@@ -11,7 +11,7 @@ from database.base import BGLModel, Hba1cModel, UserModel
 from middlewares.common import cors_middleware, handler_middleware, log_request_response
 from pydantic import BaseModel, Field
 from pydantic.networks import AnyUrl
-from routes import bgl, bgl_and_hba1c, hba1c, user
+from routes import bgl, hba1c, user
 from schemas.log_schema import LogSchema
 
 logger = Logger("ApplicationHandler")
@@ -89,7 +89,6 @@ GitHub Actions によるCI/CD でデプロイされた場合は、コミット�
 app.include_router(router=bgl.router, prefix="/bgl")
 app.include_router(router=hba1c.router, prefix="/hba1c")
 app.include_router(router=user.router, prefix="/user")
-app.include_router(router=bgl_and_hba1c.router, prefix="/bglandhba1c")
 
 
 class HealthCheckSchema(BaseModel):
@@ -156,7 +155,7 @@ def health_check() -> HealthCheckSchema:
 )
 def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
     print(log_data.model_dump())
-    return {"message": f"Logs saved to S3 by {userId}"}
+    return {"message": f"Logs saved to CloudWatch by {userId}"}
 
 
 @handler_middleware

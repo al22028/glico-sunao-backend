@@ -1,4 +1,5 @@
 # Standard Library
+from http import HTTPStatus
 from typing import List
 
 # Third Party Library
@@ -18,7 +19,10 @@ class UserController:
         return self.service.find_one(user_id)
 
     def create_one(self, data: UserCreateRequestSchema) -> UserSchema:
-        return self.service.create_one(data)
+        return self.service.create_one(data), HTTPStatus.CREATED
 
     def update_term_agreed_at(self, user_id: str) -> UserSchema:
         return self.service.update_term_agreed_at(user_id)
+
+    def delete_single_user(self, user_id: str) -> UserSchema:
+        return self.service.delete_one(user_id)

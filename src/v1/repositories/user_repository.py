@@ -14,17 +14,32 @@ class UserRepository:
         return list(items)
 
     def find_one(self, user_id: str) -> UserModel:
-        return UserModel.scan(UserModel.user_id == user_id, limit=1).next()
+        return UserModel.scan(UserModel.id == user_id, limit=1).next()
+
+    def is_exist(self, user_id: str) -> bool:
+        item = UserModel.scan(UserModel.id == user_id, limit=1)
+        try:
+            item.next()
+            return True
+        except StopIteration:
+            return False
 
     def create_one(self, data: UserCreateRequestSchema) -> UserModel:
-        item = UserModel(**data.model_dump())
+        term_agreed_at = datetime.now() if data.term_agreed else None
+        item = UserModel(id=data.id, term_agreed_at=term_agreed_at, is_deleted=False)
         item.save()
         return item
 
     def update_term_agreed_at(self, user_id: str) -> UserModel:
         item = self.find_one(user_id)
-        item.term_agreed = True
         item.term_agreed_at = datetime.now()
+        item.updated_at = datetime.now()
+        item.save()
+        return item
+
+    def delete_one(self, user_id: str) -> UserModel:
+        item = self.find_one(user_id)
+        item.is_deleted = True
         item.updated_at = datetime.now()
         item.save()
         return item
