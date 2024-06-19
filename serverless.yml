@@ -96,12 +96,31 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - "dynamodb:*"
-          Resource: "*"
-        - Effect: Allow
-          Action:
-            - "s3:*"
-          Resource: "*"
+            - "dynamodb:GetItem"
+            - "dynamodb:PutItem"
+            - "dynamodb:UpdateItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:Scan"
+            - "dynamodb:Query"
+          Resource:
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-bgl-table"
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-hba1c-table"
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-user-table"
 
   environment:
     TZ: Asia/Tokyo
@@ -117,7 +136,6 @@ provider:
     POWERTOOLS_DEBUG: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_DEBUG}
     POWERTOOLS_TRACE_MIDDLEWARES: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_TRACE_MIDDLEWARES}
     POWERTOOLS_TRACE_DISABLED: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_TRACE_DISABLED}
-    S3_QRCODE_LOG_BUCKET: ${file(./env/${opt:stage, self:custom.default.stage}.yml):S3_QRCODE_LOG_BUCKET}
 
 package:
   # package.json devDependencies are not included in the deployment package
@@ -129,7 +147,7 @@ package:
 
 functions:
   crud-apifunction:
-    name: ${self:service}-api-handler
+    name: api-handler
     description: SUNAO血糖値レコーディング API Handler
     handler: src/v1/handlers/app.lambda_handler
     events:

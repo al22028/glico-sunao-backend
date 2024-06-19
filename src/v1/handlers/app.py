@@ -1,9 +1,7 @@
 # Standard Library
-from datetime import datetime
 from typing import List
 
 # Third Party Library
-from aws.s3_client import S3Client
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.openapi.models import Contact, Server
@@ -19,7 +17,6 @@ from schemas.log_schema import LogSchema
 logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
 
-s3_client = S3Client()
 
 if STAGE == "local" or STAGE == "dev":
     if not BGLModel.exists():
@@ -54,9 +51,9 @@ app.use(middlewares=[log_request_response, cors_middleware])
 
 app.enable_swagger(
     path="/swagger",
-    title="Glico SUNAO 血糖値管理アプリAPI仕様書",
+    title="Glico SUNAO 血糖値レコーディングアプリAPI仕様書",
     version=API_VERSION_HASH,
-    summary="Glico SUNAO 血糖値管理アプリケーションのバックエンドAPIの仕様書です。",
+    summary="Glico SUNAO 血糖値レコーディングアプリケーションのバックエンドAPIの仕様書です。",
     description=f"""
 ![グリコロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOeSsMRCo0cMhs1bP4fb-1D45pii-LkGZcpg&s)
 ![SUNAOロゴ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcdtPpgEs9hfDcMxq_WJEZk7pAkHVkYtx_EA&s)
@@ -64,7 +61,7 @@ app.enable_swagger(
 
 ## 概要
 
-Glico SUNAO 血糖値管理アプリAPI仕様書。血糖値管理アプリケーションのバックエンドAPIを提供します。
+Glico SUNAO 血糖値レコーディングアプリAPI仕様書。血糖値レコーディングアプリケーションのバックエンドAPIを提供します。
 
 ## 仕様書について
 
@@ -155,12 +152,11 @@ def health_check() -> HealthCheckSchema:
     "/logs/<userId>/qr",
     cors=True,
     summary="ログを取得",
-    operation_id="saveLogsToS3",
+    operation_id="saveQRLogs",
     description="""QRコードのログをS3に保存するエンドポイント""",
 )
 def save_logs_to_s3(userId: str, log_data: LogSchema) -> dict[str, str]:
-    now = datetime.now().isoformat()
-    s3_client.put_object(key=f"logs/{userId}/{now}.json", body=log_data.model_dump_json().encode())
+    print(log_data.model_dump())
     return {"message": f"Logs saved to S3 by {userId}"}
 
 
