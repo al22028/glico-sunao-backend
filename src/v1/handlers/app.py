@@ -18,16 +18,15 @@ logger = Logger("ApplicationHandler")
 tracer = Tracer("ApplicationHandler")
 
 
-if STAGE == "local" or STAGE == "dev":
-    if not BGLModel.exists():
-        logger.info("Creating BGLModel table")
-        BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-    if not Hba1cModel.exists():
-        logger.info("Creating Hba1cModel table")
-        Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-    if not UserModel.exists():
-        logger.info("Creating UserModel table")
-        UserModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+if not BGLModel.exists():
+    logger.info("Creating BGLModel table")
+    BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+if not Hba1cModel.exists():
+    logger.info("Creating Hba1cModel table")
+    Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+if not UserModel.exists():
+    logger.info("Creating UserModel table")
+    UserModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 local_server = Server(
     url="http://localhost:3333", description="Local Development Server", variables=None

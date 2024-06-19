@@ -13,6 +13,9 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  app:
+    name: "sbr"
+
   # NOTE: Serverless Deployment Bucket Configuration
   # LINK - https://www.serverless.com/plugins/serverless-deployment-bucket
   deploymentBucket:
@@ -68,10 +71,27 @@ provider:
   # Default region (default: us-east-1)
   region: ap-northeast-1
 
+  endpointType: PRIVATE
+  vpcEndpointIds:
+    - ${file(./env/${opt:stage, self:custom.default.stage}.yml):APIGW_VPC_ENDPOINT_ID}
+  apiGateway:
+    resourcePolicy:
+      - Effect: Allow
+        Principal: "*"
+        Action: "execute-api:Invoke"
+        Resource: "arn:aws:apigateway:ap-northeast-1:381492207436:08o5nnnfqf/*"
+      - Effect: Deny
+        Principal: "*"
+        Action: "execute-api:Invoke"
+        Resource: "arn:aws:apigateway:ap-northeast-1:381492207436:08o5nnnfqf/*"
+        Condition:
+          StringNotEquals:
+            aws:SourceVpce: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APIGW_VPC_ENDPOINT_ID}
+
   # x-ray tracing
   tracing:
     lambda: true
-    apiGateway: true
+    # apiGateway: true
 
   # Lambda configuration
   runtime: python3.11
@@ -95,32 +115,34 @@ provider:
       name: ${self:service}-${self:provider.stage}-${self:custom.app.name}-apifunction-role
       statements:
         - Effect: Allow
-          Action:
-            - "dynamodb:GetItem"
-            - "dynamodb:PutItem"
-            - "dynamodb:UpdateItem"
-            - "dynamodb:DeleteItem"
-            - "dynamodb:Scan"
-            - "dynamodb:Query"
-          Resource:
-            - "Fn::Join":
-                - ":"
-                - - "arn:aws:dynamodb"
-                  - Ref: "AWS::Region"
-                  - Ref: "AWS::AccountId"
-                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-bgl-table"
-            - "Fn::Join":
-                - ":"
-                - - "arn:aws:dynamodb"
-                  - Ref: "AWS::Region"
-                  - Ref: "AWS::AccountId"
-                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-hba1c-table"
-            - "Fn::Join":
-                - ":"
-                - - "arn:aws:dynamodb"
-                  - Ref: "AWS::Region"
-                  - Ref: "AWS::AccountId"
-                  - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-user-table"
+          Action: "dynamodb:*"
+          Resource: "*"
+          # Action:
+          #   - "dynamodb:GetItem"
+          #   - "dynamodb:PutItem"
+          #   - "dynamodb:UpdateItem"
+          #   - "dynamodb:DeleteItem"
+          #   - "dynamodb:Scan"
+          #   - "dynamodb:Query"
+          # Resource:
+          #   - "Fn::Join":
+          #       - ":"
+          #       - - "arn:aws:dynamodb"
+          #         - Ref: "AWS::Region"
+          #         - Ref: "AWS::AccountId"
+          #         - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-bgl-table"
+          #   - "Fn::Join":
+          #       - ":"
+          #       - - "arn:aws:dynamodb"
+          #         - Ref: "AWS::Region"
+          #         - Ref: "AWS::AccountId"
+          #         - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-hba1c-table"
+          #   - "Fn::Join":
+          #       - ":"
+          #       - - "arn:aws:dynamodb"
+          #         - Ref: "AWS::Region"
+          #         - Ref: "AWS::AccountId"
+          #         - "table/${self:service}-${self:provider.stage}-${self:custom.app.name}-user-table"
 
   environment:
     TZ: Asia/Tokyo
@@ -147,7 +169,7 @@ package:
 
 functions:
   crud-apifunction:
-    name: api-handler
+    name: ${self:service}-${self:provider.stage}-${self:custom.app.name}-apihandler-function
     description: SUNAO血糖値レコーディング API Handler
     handler: src/v1/handlers/app.lambda_handler
     events:

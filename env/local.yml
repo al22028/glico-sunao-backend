@@ -10,5 +10,5 @@ POWERTOOLS_DEBUG: true
 POWERTOOLS_TRACE_MIDDLEWARES: true
 POWERTOOLS_TRACE_DISABLED: true
 
-# S3
-S3_QRCODE_LOG_BUCKET: "glico-sunao-qrcode-log-bucket-dev"
+# VPC config
+APIGW_VPC_ENDPOINT_ID: "vpce-083e353684e87715f" # gsp-test-sbr-vpce-apigateway
