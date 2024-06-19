@@ -5,6 +5,8 @@ from typing import List
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.event_handler.api_gateway import Router
+from aws_lambda_powertools.event_handler.openapi.params import Body, Path
+from aws_lambda_powertools.shared.types import Annotated
 from controllers.user import UserController
 from schemas import errors
 from schemas.user import UserCreateRequestSchema, UserSchema
@@ -68,7 +70,16 @@ IDを指定してユーザーデータを取得します。
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def find_one(userId: str) -> UserSchema:
+def find_one(
+    userId: Annotated[
+        str,
+        Path(
+            ...,
+            title="ユーザーID",
+            description="取得したいユーザーのID",
+        ),
+    ],
+) -> UserSchema:
     return controller.find_one(userId)
 
 
@@ -98,7 +109,16 @@ def find_one(userId: str) -> UserSchema:
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def create_one(data: UserCreateRequestSchema) -> UserSchema:
+def create_one(
+    data: Annotated[
+        UserCreateRequestSchema,
+        Body(
+            ...,
+            title="ユーザーデータ",
+            description="登録するユーザーデータ",
+        ),
+    ]
+) -> UserSchema:
     return controller.create_one(data)
 
 
@@ -129,7 +149,16 @@ def create_one(data: UserCreateRequestSchema) -> UserSchema:
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def update_term_agreed_at(userId: str) -> UserSchema:
+def update_term_agreed_at(
+    userId: Annotated[
+        str,
+        Path(
+            ...,
+            title="ユーザーID",
+            description="更新したいユーザーのID",
+        ),
+    ],
+) -> UserSchema:
     return controller.update_term_agreed_at(userId)
 
 
@@ -157,5 +186,14 @@ def update_term_agreed_at(userId: str) -> UserSchema:
         500: errors.INTERNAL_SERVER_ERROR,
     },
 )
-def delete_single_user(userId: str) -> UserSchema:
+def delete_single_user(
+    userId: Annotated[
+        str,
+        Path(
+            ...,
+            title="ユーザーID",
+            description="論理削除したいユーザーのID",
+        ),
+    ],
+) -> UserSchema:
     return controller.delete_single_user(userId)
