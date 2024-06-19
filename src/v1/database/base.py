@@ -93,18 +93,17 @@ class UserModel(Model):
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
 
-    user_id = UnicodeAttribute(null=False, hash_key=True)
-    term_agreed = BooleanAttribute(default=False)
-    term_agreed_at = UTCDateTimeAttribute(default=datetime.now)
+    id = UnicodeAttribute(null=False, hash_key=True)
+    term_agreed_at = UTCDateTimeAttribute(null=True, default=None)
     is_deleted = BooleanAttribute(default=False)
     created_at = UTCDateTimeAttribute(default=datetime.now)
     updated_at = UTCDateTimeAttribute(default=datetime.now)
 
     def serializer(self) -> UserSchema:
         serialized_data = {
-            "user_id": self.user_id,
-            "term_agreed": self.term_agreed,
-            "term_agreed_at": self.term_agreed_at.isoformat(),
+            "id": self.id,
+            "term_agreed": True if self.term_agreed_at else False,
+            "term_agreed_at": self.term_agreed_at.isoformat() if self.term_agreed_at else None,
             "is_deleted": self.is_deleted,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
