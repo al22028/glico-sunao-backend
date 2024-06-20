@@ -20,13 +20,13 @@ tracer = Tracer("ApplicationHandler")
 
 if not BGLModel.exists():
     logger.info("Creating BGLModel table")
-    BGLModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    BGLModel.create_table(wait=True, billing_mode="PAY_PER_REQUEST")
 if not Hba1cModel.exists():
     logger.info("Creating Hba1cModel table")
-    Hba1cModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    Hba1cModel.create_table(wait=True, billing_mode="PAY_PER_REQUEST")
 if not UserModel.exists():
     logger.info("Creating UserModel table")
-    UserModel.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    UserModel.create_table(wait=True, billing_mode="PAY_PER_REQUEST")
 
 local_server = Server(
     url="http://localhost:3333", description="Local Development Server", variables=None
