@@ -24,7 +24,7 @@ DYNAMODB_LOCAL_ENDPOINT = "http://localhost:8000"
 
 class BGLModel(Model):
     class Meta:
-        table_name = f"gsp_{STAGE}_sbr_bgl_table"
+        table_name = f"{STAGE}_sunao_bgl_recording_bgl_table"
         region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
@@ -56,7 +56,7 @@ class BGLModel(Model):
 
 class Hba1cModel(Model):
     class Meta:
-        table_name = f"gsp_{STAGE}_sbr_hba1c_table"
+        table_name = f"{STAGE}_sunao_bgl_recording_hba1c_table"
         region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
@@ -88,7 +88,7 @@ class Hba1cModel(Model):
 
 class UserModel(Model):
     class Meta:
-        table_name = f"gsp_{STAGE}_sbr_user_table"
+        table_name = f"{STAGE}_sunao_bgl_recording_user_table"
         region = "ap-northeast-1"
         if STAGE == "local":
             host = DYNAMODB_LOCAL_ENDPOINT
