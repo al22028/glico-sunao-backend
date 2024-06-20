@@ -1,0 +1,14 @@
+# api config
+APP_API_CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3005,https://api-stg.d02.teba-saki.net,https://web-trial.d02.teba-saki.net"
+APP_API_BASE_URL: "https://api.d02.teba-saki.net"
+
+# lambda powertools config
+POWERTOOLS_SERVICE_NAME: "api-stg"
+POWERTOOLS_LOG_LEVEL: "INFO"
+POWERTOOLS_DEV: false
+POWERTOOLS_DEBUG: false
+POWERTOOLS_TRACE_MIDDLEWARES: true
+POWERTOOLS_TRACE_DISABLED: true
+
+# VPC config
+APIGW_VPC_ENDPOINT_ID: "vpce-0058338914de9cbe3" # stg-sunao-bgl-recording-vpce-apigateway
