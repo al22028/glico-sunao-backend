@@ -36,7 +36,7 @@ def health_check() -> None:
     cprint("green", "OK")
 
 
-def main() -> None:
+def test_all() -> None:
     health_check()
 
     bgl = BGL(BASE_URL, EXAMPLE_DATA_BGL)
@@ -47,7 +47,3 @@ def main() -> None:
 
     user = User(BASE_URL, EXAMPLE_DATA_User)
     user.test()
-
-
-if __name__ == "__main__":
-    main()
