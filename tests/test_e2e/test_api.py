@@ -1,11 +1,11 @@
-import requests
-import json
+# Third Party Library
+import requests  # type: ignore
 
 # First Party Library
+from tests.test_e2e.cprint import cprint
 from tests.test_e2e.tag.BGL import BGL
 from tests.test_e2e.tag.Hba1c import Hba1c
 from tests.test_e2e.tag.User import User
-from tests.test_e2e.cprint import cprint
 
 BASE_URL = "https://api.d02.teba-saki.net/v1"
 
@@ -28,13 +28,12 @@ EXAMPLE_DATA_Hba1c = {
 EXAMPLE_DATA_User = {"id": "000001", "termAgreed": False}
 
 
-def health_check():
-    cprint("blue","[Health Check]")
+def health_check() -> None:
+    cprint("blue", "[Health Check]")
     endpoint = BASE_URL + "/healthcheck"
     res = requests.get(endpoint)
     assert res.status_code == 200, print(res.status_code)
-    cprint("green","OK")
-
+    cprint("green", "OK")
 
 
 def main() -> None:
