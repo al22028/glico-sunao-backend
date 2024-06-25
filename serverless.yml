@@ -1,6 +1,6 @@
 useDotenv: true
 
-service: glico-sunao-api-backend
+service: sunao-bgl-recording-api
 frameworkVersion: "3"
 
 plugins:
@@ -68,10 +68,27 @@ provider:
   # Default region (default: us-east-1)
   region: ap-northeast-1
 
+  endpointType: PRIVATE
+  vpcEndpointIds:
+    - ${file(./env/${opt:stage, self:custom.default.stage}.yml):APIGW_VPC_ENDPOINT_ID}
+  apiGateway:
+    resourcePolicy:
+      - Effect: Deny
+        Principal: "*"
+        Action: "execute-api:Invoke"
+        Resource: "execute-api:/*"
+        Condition:
+          StringNotEquals:
+            aws:SourceVpce: ${file(./env/${opt:stage, self:custom.default.stage}.yml):APIGW_VPC_ENDPOINT_ID}
+      - Effect: Allow
+        Principal: "*"
+        Action: "execute-api:Invoke"
+        Resource: "execute-api:/*"
+
   # x-ray tracing
   tracing:
     lambda: true
-    apiGateway: true
+    # apiGateway: true
 
   # Lambda configuration
   runtime: python3.11
@@ -87,20 +104,44 @@ provider:
   # NOTE: Serverless Deployment Bucket Configuration
   # LINK - https://www.serverless.com/plugins/serverless-deployment-bucket
   deploymentBucket:
-    name: ${self:service}-deployment-bucket-${self:provider.stage}
+    name: ${self:service}-${self:provider.stage}-deployment-bucket
     serverSideEncryption: AES256
 
   iam:
     role:
+      name: ${self:service}-${self:provider.stage}-apifunction-role
       statements:
         - Effect: Allow
           Action:
             - "dynamodb:*"
-          Resource: "*"
-        - Effect: Allow
-          Action:
-            - "s3:*"
-          Resource: "*"
+            - "dynamodb:GetItem"
+            - "dynamodb:PutItem"
+            - "dynamodb:UpdateItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:Scan"
+            - "dynamodb:Query"
+            - "dynamodb:CreateTable"
+            - "dynamodb:DescribeTable"
+          Resource:
+            # - "*"
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:provider.stage}_sunao_bgl_recording_bgl_table"
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:provider.stage}_sunao_bgl_recording_hba1c_table"
+            - "Fn::Join":
+                - ":"
+                - - "arn:aws:dynamodb"
+                  - Ref: "AWS::Region"
+                  - Ref: "AWS::AccountId"
+                  - "table/${self:provider.stage}_sunao_bgl_recording_user_table"
 
   environment:
     TZ: Asia/Tokyo
@@ -116,7 +157,6 @@ provider:
     POWERTOOLS_DEBUG: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_DEBUG}
     POWERTOOLS_TRACE_MIDDLEWARES: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_TRACE_MIDDLEWARES}
     POWERTOOLS_TRACE_DISABLED: ${file(./env/${opt:stage, self:custom.default.stage}.yml):POWERTOOLS_TRACE_DISABLED}
-    S3_QRCODE_LOG_BUCKET: ${file(./env/${opt:stage, self:custom.default.stage}.yml):S3_QRCODE_LOG_BUCKET}
 
 package:
   # package.json devDependencies are not included in the deployment package
@@ -127,9 +167,9 @@ package:
     - src/**
 
 functions:
-  ApplicationApiHandler:
-    name: ${self:service}-api-handler
-    description: Glico SUNAO Application API Handler
+  crud-apifunction:
+    name: ${self:service}-${self:provider.stage}-apihandler-function
+    description: SUNAO血糖値レコーディング API Handler
     handler: src/v1/handlers/app.lambda_handler
     events:
       - http:

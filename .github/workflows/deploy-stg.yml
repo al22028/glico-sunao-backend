@@ -1,29 +1,28 @@
-name: CI/CD for development
+name: CI/CD for staging
 
 on:
-  workflow_dispatch:
   pull_request:
     types:
       - closed
     branches:
-      - dev/main
-      - main
+      - stg
 
 jobs:
   deploy:
-    name: CI/CD for development
+    name: CI/CD for staging
     if: github.event.pull_request.merged == true
-    runs-on: [self-hosted, ubuntu]
+    runs-on: ubuntu-latest
+    # runs-on: [self-hosted, ubuntu]
     timeout-minutes: 30
     environment:
-      name: dev
+      name: stg
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
         # This is the version of the action for setting up Python, not the Python version.
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           # Semantic version range syntax or exact version of a Python version
           python-version: "3.11.6"
@@ -72,4 +71,4 @@ jobs:
         run: poetry run task format
 
       - name: Deploy
-        run: npm run deploy:dev
+        run: npm run deploy:stg

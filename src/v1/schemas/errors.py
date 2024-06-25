@@ -3,10 +3,11 @@ from http import HTTPStatus
 
 # Third Party Library
 from aws_lambda_powertools.event_handler.openapi.types import OpenAPIResponse
-from pydantic import BaseModel, Field
+from pydantic import Field
+from schemas.base import BaseSchema
 
 
-class BadRequestErrorSchema(BaseModel):
+class BadRequestErrorSchema(BaseSchema):
     """Bad Request Error Schema"""
 
     status_code: int = Field(
@@ -22,7 +23,7 @@ HTTPのステータスコードです。
     message: str = Field(..., title="エラーメッセージ", description="Bad Request Error Message", example="Bad Request")  # type: ignore
 
 
-class UnauthorizedErrorSchema(BaseModel):
+class UnauthorizedErrorSchema(BaseSchema):
     """Unauthorized Error Schema"""
 
     status_code: int = Field(
@@ -38,7 +39,7 @@ HTTPのステータスコードです。
     message: str = Field(..., title="エラーメッセージ", description="Unauthorized Error Message", example="Unauthorized")  # type: ignore
 
 
-class NotFoundErrorSchema(BaseModel):
+class NotFoundErrorSchema(BaseSchema):
     """Not Found Error Schema"""
 
     status_code: int = Field(
@@ -54,7 +55,7 @@ HTTPのステータスコードです。
     message: str = Field(..., title="エラーメッセージ", description="Not Found Error Message", example="Not Found")  # type: ignore
 
 
-class InternalServerErrorSchema(BaseModel):
+class InternalServerErrorSchema(BaseSchema):
     """Internal Server Error Schema"""
 
     status_code: int = Field(
