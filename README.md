@@ -139,3 +139,4 @@ Please refer to the following template for the commit message.
 #🙈 :see_no_evil: .gitignore追加
 #🛠️ :hammer_and_wrench: バグ修正や基本的な問題解決
 ```
+# glico-sunao-backend
